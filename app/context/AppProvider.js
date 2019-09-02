@@ -1,3 +1,7 @@
+/*
+  Defines each important imports, methods, views which are available to all child components
+*/
+
 import React from 'react';
 import {Dimensions} from 'react-native';
 import firebase from 'react-native-firebase';
@@ -28,7 +32,11 @@ export default class AppProvider extends React.Component {
       this.checkUserAuthentication((user) => {});
       
     }
-
+    /*
+      Check if user is authenticated or not.
+      If yes, then retrieve user data from FireStore
+      If no, then jump to Login screen
+    */
     checkUserAuthentication = (callBack) => {
       this.callBack  = callBack;
       this.fireBaseListener = firebase.auth().onAuthStateChanged(user => {
@@ -48,6 +56,10 @@ export default class AppProvider extends React.Component {
       })
     }
 
+    /*
+      Get logged-in user's data from FireStore and
+      set current screen as per data entered by user
+    */
     getUserData = (user) => {
       console.log("getUserData 1 : "  + user.uid);
       apiService.getUserData(user.uid,(error, response) => {
@@ -61,14 +73,22 @@ export default class AppProvider extends React.Component {
       });
     }
 
+    /*
+      Set current screen to jump to
+    */
     setCurrentScreen = (screen) => {
       this.setState({currentScreen: screen});
     }
   
+    /*
+      Set user's data to be accessible to all components
+    */
     setUserData = (userData) => {
       this.setState({userData: userData});
     }
-
+    /*
+      Set current user to be accessible to all components
+    */
     setCurrentUser = (user) => {
       this.setState({user: user});
     }
@@ -77,22 +97,43 @@ export default class AppProvider extends React.Component {
       this.fireBaseListener && this.fireBaseListener();
     }
 
+    /*
+      Method will be called to replace current screen with another
+      @context - Context of the component calling method
+      @screen - Screen name to replace with
+    */
     replaceScreen = (context, screen) => {
       context.props.navigation.replace(screen);
     }
 
+    /*
+      Method will be called to jump to other screen
+      @context - Context of the component calling method
+      @screen - Screen name to jump to
+    */
     moveToScreen = (context, screen) => {
       context.props.navigation.navigate(screen);
     }
-
+    /*
+      Display a toast message with given message string
+      @message - Message to display in a toast
+    */
     showToast = (message) =>{
       this.refs.toast.show(message);
     }
-
+    /*
+      This method will show progress dialog on screen
+      @value - True/False to show/hide progress
+    */
     showLoading = (value) =>{
       this.setState({showLoading: value});
     }
 
+    /*
+      This method will show date picker dialog on screen to select a date
+      @currentSelectedDate - Previously selected date or blank
+      @callBack - callBack method which will be called once user selects a date from dialog
+    */
     showDatePicker = (currentSelectedDate, callBack) =>{
       this.datePickerCallBack = callBack;
       let dobDate = currentSelectedDate;
@@ -114,6 +155,7 @@ export default class AppProvider extends React.Component {
   
     render() {
       return (
+        // Values/Data mostly used by all child components
         <AppContext.Provider value={{
           screenWidth:this.state.screenWidth,
           apiService:apiService,
@@ -131,6 +173,10 @@ export default class AppProvider extends React.Component {
           showDatePicker:this.showDatePicker,
         }}>
         {this.props.children}
+        
+        {/*
+          Other views mostly used by all child components
+        */}
         <Toast ref={"toast"}/>
         {this.state.showLoading && <ProgressView/> }
         <DatePickerDialog ref="dobDialog" onDatePicked={this.onDatePicked.bind(this)} />

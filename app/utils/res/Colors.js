@@ -1,3 +1,7 @@
+/*
+  Defines color code used in app
+*/
+
 const Colors = {
   headerBGColor:'#3CB371',
   appBGColor:'#FFFFFF',
