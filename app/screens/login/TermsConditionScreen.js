@@ -1,32 +1,15 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text,Picker, View,TextInput,ScrollView, Image,Dimensions,TouchableOpacity,Button} from 'react-native';
-import Colors from '../../utils/res/Colors';
-import Styles from '../../utils/res/Styles';
-import Strings from '../../utils/res/Strings';
-import { Provider,connect } from  'react-redux';
+import {Text, View,ScrollView,TouchableOpacity} from 'react-native';
 import {CheckBox} from 'react-native-elements';
-import AsyncStorage from '@react-native-community/async-storage';
-import Toast, {DURATION} from 'react-native-easy-toast';
-import ProgressView from '../../customViews/ProgressView';
-import ApiService from '../../network/ApiService';
 
-type Props = {};
-class TermsConditionScreen extends Component {
+export default class TermsConditionScreen extends Component {
  constructor(args) {
    super(args);
-   let { width } = Dimensions.get("window");
-   apiService = new ApiService();
    this.state = {
-      screenWidth: width,
-      checked:false,
-      
+      checked:false
     }
  }
- componentWillMount = () => {
- }
- componentDidMount(){
- }
-
+ 
  onAgreeClick(){
   if(this.state.checked === false){
     this.refs.toast.show("Please accept terms &amp; conditions");
@@ -72,19 +55,3 @@ class TermsConditionScreen extends Component {
    );
  }
 }
-
-const mapStateToProps = state => {
-  return {
-    // places: state.places.places
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    // add: (name) => {
-    //   dispatch(addPlace(name))
-    // }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(TermsConditionScreen)

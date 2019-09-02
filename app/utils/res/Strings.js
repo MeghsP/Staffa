@@ -36,6 +36,14 @@ const Strings = {
     {name:"100 Miles"}
   ],
 
+  APP_SCREEN_SPLASH:"SplashScreen",
+  APP_SCREEN_LOGIN:"LoginScreen",
+  APP_SCREEN_SIGNUP:"SignUpScreen",
+  APP_SCREEN_FORGOT_PASSWORD:"ForgotPasswordScreen",
+  APP_SCREEN_HOME:"HomeScreen",
+  APP_SCREEN_VERIFY:"VerifyMobileNumberScreen",
+  APP_SCREEN_TNC:"TermsConditionScreen",
+
   registerNotificationMsg:'We need to notify you of compliance related matters, payments and offers relating to your vocation and aspirations. \n\n You can change this settings at any time in your device settings.',
   registerVerificationMsg:'We need to verify your identity using your government issued identification documentation.',
 

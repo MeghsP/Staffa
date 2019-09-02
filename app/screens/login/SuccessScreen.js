@@ -1,14 +1,10 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text,Picker, View,TextInput,ScrollView, Image,Dimensions,TouchableOpacity,Button} from 'react-native';
+import {Text,View,Dimensions,TouchableOpacity} from 'react-native';
 import Colors from '../../utils/res/Colors';
 import Styles from '../../utils/res/Styles';
 import Strings from '../../utils/res/Strings';
-import { Provider,connect } from  'react-redux';
-import {CheckBox} from 'react-native-elements';
-import AsyncStorage from '@react-native-community/async-storage';
 
-type Props = {};
-class SuccessScreen extends Component {
+export default class SuccessScreen extends Component {
  constructor(args) {
    super(args);
    let { width } = Dimensions.get("window");
@@ -43,19 +39,3 @@ class SuccessScreen extends Component {
    );
  }
 }
-
-const mapStateToProps = state => {
-  return {
-    // places: state.places.places
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    // add: (name) => {
-    //   dispatch(addPlace(name))
-    // }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(SuccessScreen)

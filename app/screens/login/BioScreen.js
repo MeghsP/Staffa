@@ -1,21 +1,16 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View,TextInput,ScrollView, TouchableWithoutFeedback,Image,Dimensions,TouchableOpacity,Button} from 'react-native';
+import {Text, View,TextInput, TouchableWithoutFeedback,Image,Dimensions,TouchableOpacity} from 'react-native';
 import Colors from '../../utils/res/Colors';
 import Styles from '../../utils/res/Styles';
 import Strings from '../../utils/res/Strings';
-import { Provider,connect } from  'react-redux';
 import CustomDialogImagePicker from '../../customViews/dialog/CustomDialogImagePicker';
 import ImagePicker from 'react-native-image-crop-picker';
-import {CheckBox} from 'react-native-elements';
-import AsyncStorage from '@react-native-community/async-storage';
 import Toast, {DURATION} from 'react-native-easy-toast';
 import ProgressView from '../../customViews/ProgressView';
 import ApiService from '../../network/ApiService';
 import Picker from 'react-native-wheel-picker'
-var PickerItem = Picker.Item;
 
-type Props = {};
-class BioScreen extends Component {
+export default class BioScreen extends Component {
  constructor(args) {
    super(args);
    let { width } = Dimensions.get("window");
@@ -128,16 +123,6 @@ hidePickerAlert(){
 
             <Text style = {[Styles.NewToAppTextStyle,{marginTop:30}]}>Distance prepared to travel</Text>
             <View style = {[Styles.InputTextBoxStyle, {marginTop:2}]}>
-              {/* <Picker
-                selectedValue={this.state.distance}
-                style={{height: 45, flex:1}}
-                onValueChange={(itemValue, itemIndex) => {
-                  this.setState({distance: Strings.DISTANCE_MILES[itemIndex].name})
-                }}>
-                {Strings.DISTANCE_MILES.map((item) => {
-                   return (<Picker.Item label={item.name} value={item.name}/>);
-                })}
-              </Picker> */}
               <Picker style={{height: 45, flex:1}}
                     selectedValue={this.state.distance}
                     itemStyle={{color:Colors.black, fontSize:17,padding:6}}
@@ -165,18 +150,3 @@ hidePickerAlert(){
  }
 }
 
-const mapStateToProps = state => {
-  return {
-    // places: state.places.places
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    // add: (name) => {
-    //   dispatch(addPlace(name))
-    // }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(BioScreen)

@@ -4,6 +4,63 @@ import Strings from '../utils/res/Strings';
 import UUIDGenerator from 'react-native-uuid-generator';
 export default class ApiService {
 
+  getUserData(uid, callBack){
+    var userDataStore = firebase.firestore().collection(Strings.FS_COLLECTION_USERS).doc(uid);
+    userDataStore.get()
+    .then(querySnapshot => {
+      if(querySnapshot.exists){
+        callBack(null, querySnapshot.data());
+      } else {
+        callBack("Error", null);
+      }
+    })
+  }
+
+  signInWithEmailPassword(email,password, callBack){
+    console.log("Api Service signInWithEmailPassword");
+    firebase.auth().signInWithEmailAndPassword(email, password).then((user) => {
+      console.log("Api Service Login SUCCESS : " + JSON.stringify(user));
+      AsyncStorage.setItem(Strings.PREF_USER_DATA, JSON.stringify(user));
+      callBack(null, user);
+    }).catch(error => {
+      console.log("Api Service ERROR : " + error.message);
+      callBack(error.message, null);
+    });
+  }
+
+  sendEmailVerification(callBack){
+    firebase.auth().currentUser.sendEmailVerification()
+    .then(() => {
+      console.log("Api Service sendEmailVerification SUCCESS");
+      callBack(null, "Success");
+    }).catch(error => {
+      console.log("Api Service sendEmailVerification ERROR : " + error.message);
+      callBack(error.message, null);
+    });
+  }
+
+  signUpWithEmailPassword(email,password, callBack){
+    console.log("Api Service sendEmailVerification");
+    firebase.auth().createUserWithEmailAndPassword(email, password).then((user) => {
+      console.log("Api Service Sign UP SUCCESS : " + JSON.stringify(user));
+      callBack(null, user);
+    }).catch(error => {
+      console.log("Api Service ERROR : " + error.message);
+      callBack(error.message, null);
+    });
+  }
+
+  sendForgotPasswordEmail(email , callBack){
+    console.log("Api Service sendForgotPasswordEmail");
+    firebase.auth().sendPasswordResetEmail(email)
+    .then((user) => {
+      console.log("SUCCESS : " + JSON.stringify(user));
+      callBack(null, "success");
+    }).catch(error => {
+      callBack(error.message, null);
+    });
+  }
+
   uploadImage(filePath,imageAvatar, callBack){
     UUIDGenerator.getRandomUUID((uuid) => {
       console.log("ApiService uploadImage uuid : " + uuid);
@@ -32,11 +89,15 @@ export default class ApiService {
     });  
   };
 
-  updateFirestoreData(data){
-   var currentUser = firebase.auth().currentUser;
-   var userID = currentUser.uid;
-   console.log("updateFirestoreData user : " + JSON.stringify(currentUser)); 
-   console.log("updateFirestoreData userID : " +userID); 
+  addFirestoreUserData(userID, data){
+    console.log("addFirestoreUserData userID : " +userID); 
+    var users = firebase.firestore().collection(Strings.FS_COLLECTION_USERS);
+    var userDoc = users.doc(userID);
+    userDoc.set(data);
+   }
+
+  updateFirestoreUserData(userID, data){
+   console.log("updateFirestoreUserData userID : " +userID); 
    var users = firebase.firestore().collection(Strings.FS_COLLECTION_USERS);
    var userDoc = users.doc(userID);
    userDoc.update(data);

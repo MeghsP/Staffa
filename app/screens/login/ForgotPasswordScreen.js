@@ -1,71 +1,62 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View,TextInput,ToastAndroid, Image,Dimensions,TouchableOpacity,Button} from 'react-native';
-import Colors from '../../utils/res/Colors';
-import Styles from '../../utils/res/Styles';
-import Strings from '../../utils/res/Strings';
-import { Provider,connect } from  'react-redux';
-import ProgressView from '../../customViews/ProgressView';
-import firebase from 'react-native-firebase';
-import AsyncStorage from '@react-native-community/async-storage';
-import Toast, {DURATION} from 'react-native-easy-toast'
+import {Text, View,TextInput,TouchableOpacity} from 'react-native';
+import {AppConsumer} from '../../context/AppProvider'; 
+import ApiService from '../../network/ApiService';
 
-type Props = {};
-class ForgotPasswordScreen extends Component {
+export default class ForgotPasswordScreen extends Component {
  constructor(args) {
    super(args);
-   let { width } = Dimensions.get("window");
+   apiService = new ApiService();
    this.state = {
-      screenWidth: width,
-      username:'',
-      password:'',
-      isUserLoggedIn:false,
-      isLoading:false,
+      username:''
     }
- }
- componentWillMount = () => {
- }
- componentDidMount(){
  }
 
  onForgotPasswordClick(){
-  this.setState({isLoading:true});
-  firebase.auth().sendPasswordResetEmail(this.state.username)
-  .then((user) => {
-    console.log("SUCCESS : " + JSON.stringify(user));
-    this.setState({isLoading:false});
-    this.refs.toast.show("Reset passowrd email has been sent");
-    setTimeout(()=>{
+  if(!this.isInputValid()){
+    return;
+  }
+  this.context.showLoading(true);
+  apiService.sendForgotPasswordEmail(this.state.username, (error, response) => {
+    this.context.showLoading(false);
+    if(response){
+      this.context.showToast("Reset passowrd email has been sent");
       this.props.navigation.goBack();
-    }, 1000);
+    } else {
+      this.context.showToast(error);
+    }
     
-  }).catch(error => {
-    this.setState({isLoading:false});
-    console.log("ERROR : " + error.message);
-    this.refs.toast.show(error.message);
   });
-  
  }
- 
+
+ isInputValid(){
+  if(this.state.username === ""){
+    this.context.showToast("Please enter email");
+     return false;
+  }
+  return true;
+ }
 
  render() {
    return (
-     <View style={Styles.root}>
-        <View style={{alignItems:'center', marginTop:10, width:this.state.screenWidth}}>
-            <Text style = {Styles.headerLogoTextStyle}>{Strings.appName}</Text>
-            <Text style = {Styles.headerInfoTextStyle}>Forgot Password</Text>
+    <AppConsumer>
+    {(context) => (
+     <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
+        <View style={{alignItems:'center', marginTop:10, width:context.screenWidth}}>
+            <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
+            <Text style = {context.utilities.styles.headerInfoTextStyle}>Forgot Password</Text>
         </View>
-        <View style = {Styles.baseStyle1}>
-            <View style = {{width:this.state.screenWidth}}>
-                    <View style = {Styles.InputTextBoxStyle}>
+        <View style = {context.utilities.styles.baseStyle1}>
+            <View style = {{width:context.screenWidth}}>
+                    <View style = {context.utilities.styles.InputTextBoxStyle}>
                         <TextInput
-                           ref = 'inputUsername'
-                           style = {this.state.username === '' ? Styles.InputTextDisableStyle : Styles.InputTextEnableStyle}
+                           style = {this.state.username === '' ? context.utilities.styles.InputTextDisableStyle : context.utilities.styles.InputTextEnableStyle}
                            placeholder = "Username"
                            onChangeText = {(text) => {this.setState({username:text})}}
                            returnKeyType= { "done" }
                            keyboardType = {"email-address"}
                            underlineColorAndroid='transparent'
-                           placeholderTextColor={Colors.hintColor}
+                           placeholderTextColor={context.utilities.colors.hintColor}
                            textAlign={'center'}
                            value = {this.state.username}
                            onSubmitEditing = {() => {this.onForgotPasswordClick()}}
@@ -73,29 +64,13 @@ class ForgotPasswordScreen extends Component {
                     </View>
 
                     <TouchableOpacity onPress={ () => this.onForgotPasswordClick()}>
-                        <Text style = {Styles.LoginButtonEnableTextStyle}>RESET PASSWORD</Text>
+                        <Text style = {context.utilities.styles.LoginButtonEnableTextStyle}>RESET PASSWORD</Text>
                     </TouchableOpacity>
               </View>      
         </View>
-        {this.state.isLoading && <ProgressView/> }
-        <Toast ref="toast"/>
      </View>
+     )} 
+     </AppConsumer>
    );
  }
 }
-
-const mapStateToProps = state => {
-  return {
-    // places: state.places.places
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    // add: (name) => {
-    //   dispatch(addPlace(name))
-    // }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(ForgotPasswordScreen)

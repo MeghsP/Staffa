@@ -1,16 +1,14 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text,Picker, View,TextInput,ScrollView, Image,Dimensions,TouchableOpacity,Button} from 'react-native';
+import {Text,View,ScrollView, Dimensions,TouchableOpacity} from 'react-native';
 import Colors from '../../utils/res/Colors';
 import Styles from '../../utils/res/Styles';
 import Strings from '../../utils/res/Strings';
-import { Provider,connect } from  'react-redux';
 import {CheckBox} from 'react-native-elements';
 import Toast, {DURATION} from 'react-native-easy-toast';
 import ProgressView from '../../customViews/ProgressView';
 import ApiService from '../../network/ApiService';
 
-type Props = {};
-class NotificationsScreen extends Component {
+export default class NotificationsScreen extends Component {
  constructor(args) {
    super(args);
    apiService = new ApiService();
@@ -77,19 +75,3 @@ class NotificationsScreen extends Component {
    );
  }
 }
-
-const mapStateToProps = state => {
-  return {
-    // places: state.places.places
-  }
-}
-
-const mapDispatchToProps = dispatch => {
-  return {
-    // add: (name) => {
-    //   dispatch(addPlace(name))
-    // }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(NotificationsScreen)
