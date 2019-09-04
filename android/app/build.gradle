@@ -189,6 +189,8 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-pdf')
+    implementation project(':rn-fetch-blob')
     implementation project(':react-native-wheel-picker')
     implementation project(':react-native-uuid-generator')
     implementation project(':react-native-firebase')

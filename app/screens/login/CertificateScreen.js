@@ -1,20 +1,12 @@
 import React, {Component} from 'react';
-import {Text,View,ScrollView, Dimensions,TouchableOpacity} from 'react-native';
-import Colors from '../../utils/res/Colors';
-import Styles from '../../utils/res/Styles';
-import Strings from '../../utils/res/Strings';
+import {Text,View,ScrollView, TouchableOpacity} from 'react-native';
 import {CheckBox} from 'react-native-elements';
-import Toast, {DURATION} from 'react-native-easy-toast';
-import ProgressView from '../../customViews/ProgressView';
-import ApiService from '../../network/ApiService';
+import {AppConsumer} from '../../context/AppProvider'; 
 
 export default class CertificateScreen extends Component {
  constructor(args) {
    super(args);
-   let { width } = Dimensions.get("window");
-   apiService = new ApiService();
    this.state = {
-      screenWidth: width,
       totalData:[{id:1,name:'Moving &amp; Handling', checked:false},
                   {id:2,name:'Healthy &amp; Safety', checked:false},
                   {id:3,name:'infection Control', checked:false},
@@ -30,21 +22,16 @@ export default class CertificateScreen extends Component {
                 ],
     }
  }
- componentWillMount = () => {
- }
- componentDidMount(){
- }
 
  onNextClick(){
   var data =  {
     cartificates:{
       data:this.state.totalData
   }};
-  apiService.updateFirestoreData(data);
-  var {navigate} = this.props.navigation;
-  navigate("ReferencesScreen");
+  this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data); 
+  this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_REFERENCES); 
  }
- onCheck(data, index){
+ onCheck(index){
   var joined = this.state.totalData;
   if(joined[index].checked){
     joined[index].checked = false;
@@ -57,13 +44,15 @@ export default class CertificateScreen extends Component {
 
  render() {
    return (
-     <View style={Styles.root}>
-        <View style={{alignItems:'center', marginTop:10, width:this.state.screenWidth}}>
-            <Text style = {Styles.headerLogoTextStyle}>{Strings.appName}</Text>
-            <Text style = {Styles.headerInfoTextStyle}>Your Certificates</Text>
+    <AppConsumer>
+    {(context) => (
+     <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
+        <View style={{alignItems:'center', marginTop:10, width:context.screenWidth}}>
+            <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
+            <Text style = {context.utilities.styles.headerInfoTextStyle}>Your Certificates</Text>
         </View>
-        <View style = {Styles.baseStyle1}>
-            <Text style = {[Styles.NewToAppTextStyle,{marginTop:10,marginLeft:40, marginRight:40}]}>Please tick to confirm that you have the following up to date certifications</Text>
+        <View style = {context.utilities.styles.baseStyle1}>
+            <Text style = {[context.utilities.styles.NewToAppTextStyle,{marginTop:10,marginLeft:40, marginRight:40}]}>Please tick to confirm that you have the following up to date certifications</Text>
             <ScrollView>
             {
               this.state.totalData.map((data,index) => {
@@ -71,11 +60,11 @@ export default class CertificateScreen extends Component {
                   <View>
                     <CheckBox
                       title={data.name}
-                      checkedColor={Colors.appColor}
-                      containerStyle = {Styles.CheckBoxLeftContainerStyle}
-                      textStyle = {[Styles.CheckBoxTextStyle]}
+                      checkedColor={context.utilities.colors.appColor}
+                      containerStyle = {context.utilities.styles.CheckBoxLeftContainerStyle}
+                      textStyle = {[context.utilities.styles.CheckBoxTextStyle]}
                       checked={data.checked}
-                      onPress={() => {this.onCheck(data, index)}}
+                      onPress={() => {this.onCheck(index)}}
                     />
                   </View>
                 )
@@ -83,13 +72,13 @@ export default class CertificateScreen extends Component {
             }
             </ScrollView>
         </View>
-        <Text style = {[Styles.NewToAppTextStyle,{marginTop:20, color:Colors.red}]}>Click on the title to upload of scan your certificate</Text>
-            <TouchableOpacity style = {{width:this.state.screenWidth}} onPress={ () => this.onNextClick()}>
-              <Text style = {[Styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>NEXT</Text>
+        <Text style = {[context.utilities.styles.NewToAppTextStyle,{marginTop:20, color:context.utilities.colors.red}]}>Click on the title to upload of scan your certificate</Text>
+            <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onNextClick()}>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>NEXT</Text>
             </TouchableOpacity>
-            {this.state.isLoading && <ProgressView/> }
-            <Toast ref="toast"/>    
      </View>
+     )} 
+     </AppConsumer>
    );
  }
 }

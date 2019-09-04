@@ -44,14 +44,32 @@ const Strings = {
   APP_SCREEN_LOGIN:"LoginScreen",
   APP_SCREEN_SIGNUP:"SignUpScreen",
   APP_SCREEN_FORGOT_PASSWORD:"ForgotPasswordScreen",
-  APP_SCREEN_HOME:"HomeScreen",
   APP_SCREEN_VERIFY:"VerifyMobileNumberScreen",
+  APP_SCREEN_ADD_ADDRESS:"AddAddressScreen",
   APP_SCREEN_TNC:"TermsConditionScreen",
+  APP_SCREEN_EMP_CONTRACT:"EmploymentContractScreen",
+  APP_SCREEN_INFO_SHARING:"InfoSharingScreen",
+  APP_SCREEN_NOTIFICATION:"NotificationsScreen",
+  APP_SCREEN_BEGIN_VERIFICATION:"BeginVerificationScreen",
+  APP_SCREEN_VERIFICATION:"VerificationScreen",
+  APP_SCREEN_PRIVACY:"PrivacyScreen",
+  APP_SCREEN_DBS:"DBSScreen",
+  APP_SCREEN_QUALIFICATION:"QualificationScreen",
+  APP_SCREEN_CERTIFICATE:"CertificateScreen",
+  APP_SCREEN_REFERENCES:"ReferencesScreen",
+  APP_SCREEN_SKILLS:"SkillsScreen",
+  APP_SCREEN_BIO:"BioScreen",
+  APP_SCREEN_SUCCESS:"SuccessScreen",
+
+  APP_SCREEN_HOME:"HomeScreen",
+  APP_SCREEN_PROFILE:"ProfileScreen",
 
   registerNotificationMsg:'We need to notify you of compliance related matters, payments and offers relating to your vocation and aspirations. \n\n You can change this settings at any time in your device settings.',
   registerVerificationMsg:'We need to verify your identity using your government issued identification documentation.',
 
   PREF_USER_DATA : "UserData",
+
+  FS_PDF_TNC:'https://firebasestorage.googleapis.com/v0/b/staffa-5e3a4.appspot.com/o/APP_DATA%2FTnC%2FUntitled.pdf?alt=media&token=db139182-4eb0-4a69-909b-d008a48c54b3',
 
   FS_FILE_DIR_VERIFICATION:"VerificationDoc",
   FS_FILE_DIR_DBS:"DBS_Doc",

@@ -1,26 +1,14 @@
 import React, {Component} from 'react';
-import {Text,View,ScrollView, Dimensions,TouchableOpacity} from 'react-native';
-import Colors from '../../utils/res/Colors';
-import Styles from '../../utils/res/Styles';
-import Strings from '../../utils/res/Strings';
+import {Text,View,ScrollView,TouchableOpacity} from 'react-native';
 import {CheckBox} from 'react-native-elements';
-import Toast, {DURATION} from 'react-native-easy-toast';
-import ProgressView from '../../customViews/ProgressView';
-import ApiService from '../../network/ApiService';
+import {AppConsumer} from '../../context/AppProvider'; 
 
 export default class NotificationsScreen extends Component {
  constructor(args) {
    super(args);
-   apiService = new ApiService();
-   let { width } = Dimensions.get("window");
    this.state = {
-      screenWidth: width,
       checked1:false,
     }
- }
- componentWillMount = () => {
- }
- componentDidMount(){
  }
 
  onAgreeClick(){
@@ -28,50 +16,43 @@ export default class NotificationsScreen extends Component {
     notificationSettings:{
       isNotificationON:this.state.checked1,
   }};
-  apiService.updateFirestoreData(data); 
-  var {navigate} = this.props.navigation;
-  navigate("BeginVerificationScreen");
+  this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data); 
+  this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_BEGIN_VERIFICATION);
  }
 
  render() {
    return (
-     <View style={Styles.root}>
-        <View style={{alignItems:'center', marginTop:10, width:this.state.screenWidth}}>
-            <Text style = {Styles.headerLogoTextStyle}>{Strings.appName}</Text>
-            <Text style = {Styles.headerInfoTextStyle}>Notifications</Text>
+    <AppConsumer>
+    {(context) => (
+     <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}> 
+        <View style={{alignItems:'center', marginTop:10, width:context.screenWidth}}>
+            <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
+            <Text style = {context.utilities.styles.headerInfoTextStyle}>Notifications</Text>
         </View>
-        <View style = {Styles.baseStyle1}>
-            <ScrollView style={[Styles.TNCFixBackgroundViewStyle, {height:100}]}>
-              <Text style = {[Styles.TNCTextStyle,{fontSize:15}]}>{Strings.registerNotificationMsg}</Text>
+        <View style = {context.utilities.styles.baseStyle1}>
+            <ScrollView style={[context.utilities.styles.TNCFixBackgroundViewStyle, {height:100}]}>
+              <Text style = {[context.utilities.styles.TNCTextStyle,{fontSize:15}]}>{context.utilities.strings.registerNotificationMsg}</Text>
             </ScrollView>
 
           <CheckBox
               title='Turn Notifications ON/OFF'
-              checkedColor={Colors.appColor}
-              containerStyle = {Styles.CheckBoxLeftContainerStyle}
-              textStyle = {[Styles.CheckBoxTextStyle]}
+              checkedColor={context.utilities.colors.appColor}
+              containerStyle = {context.utilities.styles.CheckBoxLeftContainerStyle}
+              textStyle = {[context.utilities.styles.CheckBoxTextStyle]}
               checked={this.state.checked1}
               onPress={() => { 
                 this.setState({checked1: !this.state.checked1})
               }}
           />
-          {/* <CheckBox
-              title='Turn Notifications OFF'
-              checkedColor={Colors.appColor}
-              containerStyle = {Styles.CheckBoxLeftContainerStyle}
-              textStyle = {[Styles.CheckBoxTextStyle]}
-              checked={this.state.checked2}
-              onPress={() => this.setState({checked2: !this.state.checked2})}
-          /> */}
           
-            <TouchableOpacity style = {{width:this.state.screenWidth}} onPress={ () => this.onAgreeClick()}>
-              <Text style = {[Styles.LoginButtonEnableTextStyle, {marginTop:30, marginBottom:30}]}>NEXT</Text>
+            <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onAgreeClick()}>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:30, marginBottom:30}]}>NEXT</Text>
             </TouchableOpacity>
 
         </View>
-        {this.state.isLoading && <ProgressView/> }
-        <Toast ref="toast"/>
      </View>
+     )} 
+     </AppConsumer>
    );
  }
 }

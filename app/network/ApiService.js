@@ -61,6 +61,17 @@ export default class ApiService {
     });
   }
 
+  signOut(callBack){
+    console.log("Api Service signOut");
+    firebase.auth().signOut()
+    .then((data) => {
+      console.log("SUCCESS : " + JSON.stringify(data));
+      callBack(null, "success");
+    }).catch(error => {
+      callBack(error.message, null);
+    });
+  }
+
   uploadImage(filePath,imageAvatar, callBack){
     UUIDGenerator.getRandomUUID((uuid) => {
       console.log("ApiService uploadImage uuid : " + uuid);

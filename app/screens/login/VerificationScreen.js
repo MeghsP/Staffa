@@ -1,40 +1,24 @@
 import React, {Component} from 'react';
-import {Text,Picker, View, Image,Dimensions,TouchableOpacity} from 'react-native';
-import Colors from '../../utils/res/Colors';
-import Styles from '../../utils/res/Styles';
-import Strings from '../../utils/res/Strings';
-import CustomDialogImagePicker from '../../customViews/dialog/CustomDialogImagePicker';
-import ImagePicker from 'react-native-image-crop-picker';
-import Toast, {DURATION} from 'react-native-easy-toast';
-import ProgressView from '../../customViews/ProgressView';
-import ApiService from '../../network/ApiService';
+import {Text,Picker, View, Image,TouchableOpacity} from 'react-native';
+import {AppConsumer} from '../../context/AppProvider'; 
 
 export default class VerificationScreen extends Component {
  constructor(args) {
    super(args);
-   apiService = new ApiService();
-   let { width } = Dimensions.get("window");
    this.state = {
-      screenWidth: width,
-      docType:Strings.DOC_TYPE[0].name,
-      showPickerDialog:false,
       avatarSource:'',
-      isLoading:false,
     }
- }
- componentWillMount = () => {
- }
- componentDidMount(){
  }
 
  onNextClick(){
   if(this.state.avatarSource === ""){
-    this.refs.toast.show("Please select document");
+    this.context.showToast("Please select document");
      return;
   }
 
-  this.setState({isLoading:true});
-  apiService.uploadImage(Strings.FS_FILE_DIR_VERIFICATION,this.state.avatarSource,(error, response) => {
+  this.context.showLoading(true);
+  var filePath = this.context.currentUser.uid +"/"+this.context.utilities.strings.FS_FILE_DIR_VERIFICATION;
+  this.context.apiService.uploadImage(filePath,this.state.avatarSource,(error, response) => {
     console.log("onNextClick response : " + response);
     console.log("onNextClick error : " + error);
     if(response.length > 0){
@@ -43,95 +27,62 @@ export default class VerificationScreen extends Component {
           docType:this.state.docType,
           docURL:response
       }};
-      apiService.updateFirestoreData(data);
-      this.setState({isLoading:false});
-      var {navigate} = this.props.navigation;
-      navigate("DBSScreen");
+      this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, data);
+      this.context.showLoading(false);
+      this.context.replaceScreen(this,this.context.utilities.strings.APP_SCREEN_DBS)
     } else {
-      this.refs.toast.show("File not uploaded");
+      this.context.showToast("File not uploaded");
     }
   })
-  
  }
 
- onOptionSelected(option){
-  this.hidePickerAlert();
-  if (option == 0) {
-    this.onCameraClick();
-  } else {
-    this.onGalleryClick();
-  }
-}
-onCameraClick(){
-  ImagePicker.openCamera({
-    width: 500,
-    height: 500,
-    cropping: true
-  }).then(image => {
-    console.log(image);
-    console.log("Image.path : "+image.path);
-    this.setState({avatarSource : image.path });
-  });
-}
-
-onGalleryClick(){
-  ImagePicker.openPicker({
-    width: 500,
-    height: 500,
-    cropping: true
-  }).then(image => {
-    console.log("Image : "+image);
-    console.log("Image.path : "+image.path);
-    this.setState({avatarSource : image.path });
-  });
-}
-hidePickerAlert(){
-  this.setState({showPickerDialog: false});
-}
-
  onScanClick(){
-  this.setState({showPickerDialog:true});
+   this.context.showImagePickerAlert((image) => {
+    this.setState({avatarSource:image});
+   });
  }
 
  render() {
    return (
-     <View style={Styles.root}>
-        <View style={{alignItems:'center', marginTop:10, width:this.state.screenWidth}}>
-            <Text style = {Styles.headerLogoTextStyle}>{Strings.appName}</Text>
-            <Text style = {Styles.headerInfoTextStyle}>Verification</Text>
+    <AppConsumer>
+    {(context) => (
+     <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
+        <View style={{alignItems:'center', marginTop:10, width:context.screenWidth}}>
+            <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
+            <Text style = {context.utilities.styles.headerInfoTextStyle}>Verification</Text>
         </View>
-        <View style = {Styles.baseStyle1}>
-            <Text style = {[Styles.NewToAppTextStyle,{marginTop:50}]}>Select Document Type</Text>
-            <View style = {[Styles.InputTextBoxStyle, {marginTop:50}]}>
+        <View style = {context.utilities.styles.baseStyle1}>
+            <Text style = {[context.utilities.styles.NewToAppTextStyle,{marginTop:50}]}>Select Document Type</Text>
+            <View style = {[context.utilities.styles.InputTextBoxStyle, {marginTop:50}]}>
               <Picker
                 selectedValue={this.state.docType}
                 style={{height: 45, flex:1}}
                 onValueChange={(itemValue, itemIndex) => {
-                  this.setState({docType: Strings.GENDER[itemIndex].name})
+                  this.setState({docType: context.utilities.strings.DOC_TYPE[itemIndex].name})
                 }}>
-                {Strings.DOC_TYPE.map((item) => {
+                {context.utilities.strings.DOC_TYPE.map((item) => {
                   return (<Picker.Item label={item.name} value={item.name}/>);
                 })}
               </Picker>
             </View>          
 
-            <View style={{margin:30, height:200, width:this.state.screenWidth - 60, borderColor:Colors.black,borderWidth:1, borderRadius:1}}>
+            <View style={{margin:30, height:200, width:context.screenWidth - 60, borderColor:context.utilities.colors.black,borderWidth:1, borderRadius:1}}>
                 {this.state.avatarSource !== "" &&
-                  <Image style={{width:this.state.screenWidth - 64, height: 200}} source={{uri:this.state.avatarSource}} />
+                  <Image style={{width:context.screenWidth - 64, height: 200}} source={{uri:this.state.avatarSource}} />
                 }
             </View>
-            <TouchableOpacity style = {{width:this.state.screenWidth}} onPress={ () => this.onScanClick()}>
-              <Text style = {[Styles.LoginButtonEnableTextStyle, {marginTop:30, marginBottom:30}]}>{this.state.avatarSource === "" ? 'Upload Document' : 'Scan Document'}</Text>
+            <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onScanClick()}>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:30, marginBottom:30}]}>{this.state.avatarSource === "" ? 'Upload Document' : 'Scan Document'}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style = {{width:this.state.screenWidth}} onPress={ () => this.onNextClick()}>
-              <Text style = {[Styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>NEXT</Text>
+            <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onNextClick()}>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>NEXT</Text>
             </TouchableOpacity>
 
         </View>
-        {this.state.isLoading && <ProgressView/> }
-        <Toast ref="toast"/>
-        {<CustomDialogImagePicker onChooseOption = {(option) => {this.onOptionSelected(option)}} onCancelPress = {() => {this.hidePickerAlert()}} visibility = {this.state.showPickerDialog}/>} 
+        
      </View>
+     )} 
+     </AppConsumer>
    );
  }
 }

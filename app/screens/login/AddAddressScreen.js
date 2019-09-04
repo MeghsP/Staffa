@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {Text,View,TextInput,TouchableOpacity} from 'react-native';
+import {Text,View,TextInput,TouchableOpacity, Image} from 'react-native';
 import {AppConsumer} from '../../context/AppProvider'; 
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 export default class AddAddressScreen extends Component {
  constructor(args) {
@@ -13,7 +14,9 @@ export default class AddAddressScreen extends Component {
       accountName:'',
       bankName:'',
       accountNumber:'',
-      sortCode:''
+      sortCode:'',
+
+      isDataAvailable:false,
     }
     this.refAdd1 = React.createRef();
     this.refAdd2 = React.createRef();
@@ -24,6 +27,14 @@ export default class AddAddressScreen extends Component {
     this.refBankName = React.createRef();
     this.refAccountNumber = React.createRef();
     this.refSortCode = React.createRef();
+ }
+
+ componentDidMount(){
+   if(this.context.userData && this.context.userData.addressData){
+    var addressData = this.context.userData.addressData;
+    this.setState(addressData);
+    this.setState({isDataAvailable:true});
+   }
  }
 
  onNextClick(){
@@ -42,7 +53,13 @@ export default class AddAddressScreen extends Component {
       sortCode:this.state.sortCode
   }};
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, data); 
-  this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_TNC);
+  if(this.state.isDataAvailable){
+    this.context.userData.addressData = data.addressData;
+    this.context.goBack(this);
+  } else {
+    this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_TNC);
+  }
+  
  }
 
  isInputValid(){
@@ -85,11 +102,19 @@ export default class AddAddressScreen extends Component {
    return (
     <AppConsumer>
     {(context) => (
-     <View style={context.utilities.styles.root}>
-        <View style={{alignItems:'center', marginTop:10, width:context.screenWidth}} ref={(ref) => { this.context = context; }}>
-            <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
-            <Text style = {context.utilities.styles.headerInfoTextStyle}>New Account</Text>
+     <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
+       <View style={{marginTop:10, flexDirection:'row'}}>
+         {this.state.isDataAvailable && 
+            <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
+              <Image source={require('../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
+            </TouchableOpacity>
+          }
+          <View style={{alignItems:'center', flex:1}} >
+              <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
+              <Text style = {context.utilities.styles.headerInfoTextStyle}>Account</Text>
+          </View>
         </View>
+        
         <View style = {context.utilities.styles.baseStyle1}>
             <View style = {{width:context.screenWidth}}>
                     <View style = {context.utilities.styles.InputTextBoxStyle}>
@@ -207,7 +232,7 @@ export default class AddAddressScreen extends Component {
                     </View>
 
                     <TouchableOpacity onPress={ () => this.onNextClick()}>
-                        <Text style = {context.utilities.styles.LoginButtonEnableTextStyle}>NEXT</Text>
+                        <Text style = {context.utilities.styles.LoginButtonEnableTextStyle}>{this.state.isDataAvailable ? 'UPDATE' :  "NEXT"}</Text>
                     </TouchableOpacity>
               </View>   
         </View>

@@ -1,7 +1,6 @@
 /*
   Defines each important imports, methods, views which are available to all child components
 */
-
 import React from 'react';
 import {Dimensions} from 'react-native';
 import firebase from 'react-native-firebase';
@@ -9,6 +8,11 @@ import ApiService from '../network/ApiService';
 import Toast, {DURATION} from 'react-native-easy-toast';
 import ProgressView from '../customViews/ProgressView';
 import { DatePickerDialog } from 'react-native-datepicker-dialog';
+import CustomDialogImagePicker from '../customViews/dialog/CustomDialogImagePicker';
+import ImagePicker from 'react-native-image-crop-picker';
+import LeftDrawer from '../customViews/LeftDrawer.js';
+import CustomDialog from '../customViews/dialog/CustomDialog.js';
+
 import Colors from '../utils/res/Colors';
 import Styles from '../utils/res/Styles';
 import Strings from '../utils/res/Strings';
@@ -20,14 +24,22 @@ export default class AppProvider extends React.Component {
     constructor(props) {
       super(props);
       let { width } = Dimensions.get("window");
+      let { height } = Dimensions.get("window");
       apiService = new ApiService();
       this.state = {
         screenWidth: width,
+        screenHeight: height,
+        showPickerDialog:false,
+        showDialog:false,
         showLoading:false,
-        userData: {},
+        userData: null,
         user:null,
-        isUserLoggedIn:false,
         currentScreen:Strings.APP_SCREEN_LOGIN,
+        currentContext:null,
+
+        okText:'',
+        cancelText:'',
+        dialogMsg:'',
       };
       this.checkUserAuthentication((user) => {});
       
@@ -56,6 +68,13 @@ export default class AppProvider extends React.Component {
       })
     }
 
+    clearAllData = () => {
+      this.setState({userData:null});
+      this.setState({user:null});
+      this.setState({currentContext:null});
+      this.setState({currentScreen: Strings.APP_SCREEN_LOGIN});
+    }
+
     /*
       Get logged-in user's data from FireStore and
       set current screen as per data entered by user
@@ -65,6 +84,7 @@ export default class AppProvider extends React.Component {
       apiService.getUserData(user.uid,(error, response) => {
         if(response){
           this.setUserData(response);
+          console.log("getUserData 2 : "  + JSON.stringify(response));
           this.setCurrentScreen(apiService.getScreenName(response));
           if(this.callBack){
             this.callBack(user);
@@ -114,6 +134,11 @@ export default class AppProvider extends React.Component {
     moveToScreen = (context, screen) => {
       context.props.navigation.navigate(screen);
     }
+
+
+    goBack = (context) => {
+      context.props.navigation.goBack();
+    }
     /*
       Display a toast message with given message string
       @message - Message to display in a toast
@@ -152,12 +177,93 @@ export default class AppProvider extends React.Component {
         this.datePickerCallBack(date);
       }
     }
+
+    showImagePickerAlert = (callBack) => {
+      this.imagePickerCallBack = callBack;
+      this.setState({showPickerDialog: true});
+    }
+
+    onOptionSelected(option){
+      this.hidePickerAlert();
+      if (option == 0) {
+        this.onCameraClick();
+      } else {
+        this.onGalleryClick();
+      }
+    }
+    onCameraClick(){
+      ImagePicker.openCamera({
+        width: 500,
+        height: 500,
+        cropping: true
+      }).then(image => {
+        console.log(image);
+        console.log("Image.path : "+image.path);
+        if(this.imagePickerCallBack){
+          this.imagePickerCallBack(image.path);
+        }
+      });
+    }
+    
+    onGalleryClick(){
+      ImagePicker.openPicker({
+        width: 500,
+        height: 500,
+        cropping: true
+      }).then(image => {
+        console.log("Image : "+image);
+        console.log("Image.path : "+image.path);
+        if(this.imagePickerCallBack){
+          this.imagePickerCallBack(image.path);
+        }
+      });
+    }
+    hidePickerAlert(){
+      this.setState({showPickerDialog: false});
+    }
+
+    toggleDrawer = () => {
+      if(this.state.isDrawerOpen){
+        this.setState({isDrawerOpen:false});
+      } else {
+        this.setState({isDrawerOpen:true});
+      }
+    }
+
+    setCurrentContext = (context) => {
+      this.setState({currentContext:context});
+    }
+
+    showDialog = (okText, cancelText, message, callBack) => {
+      this.dialogCallBack = callBack;
+      this.setState({okText:okText});
+      this.setState({cancelText:cancelText});
+      this.setState({dialogMsg:message});
+      this.setState({showDialog:true});
+    }
+
+    onDialogOkClick = () => {
+      this.toggleDrawer();
+      this.setState({showDialog:false});
+      if(this.dialogCallBack){
+        this.dialogCallBack(false, true);
+      }
+    }
   
+    onDialogSkipClick = () => {
+      this.setState({showDialog:false});
+      if(this.dialogCallBack){
+        this.dialogCallBack(true, false);
+      }
+    }
+    
     render() {
       return (
         // Values/Data mostly used by all child components
         <AppContext.Provider value={{
+          currentContext:this.state.currentContext,
           screenWidth:this.state.screenWidth,
+          screenHeight:this.state.screenHeight,
           apiService:apiService,
           utilities:{colors:Colors, styles:Styles, strings:Strings},
           checkUserAuthentication:this.checkUserAuthentication,
@@ -168,18 +274,27 @@ export default class AppProvider extends React.Component {
           currentScreen:this.state.currentScreen,
           replaceScreen: this.replaceScreen,
           moveToScreen: this.moveToScreen,
+          goBack:this.goBack,
+          setCurrentContext:this.setCurrentContext,
           showToast:this.showToast,
           showLoading:this.showLoading,
           showDatePicker:this.showDatePicker,
+          showImagePickerAlert:this.showImagePickerAlert,
+          toggleDrawer:this.toggleDrawer,
+          showDialog:this.showDialog,
+          clearAllData:this.clearAllData,
         }}>
         {this.props.children}
         
         {/*
           Other views mostly used by all child components
         */}
+        {this.state.isDrawerOpen && <LeftDrawer onDrawerClose = {this.closeDrawer} screen = {this} />} 
         <Toast ref={"toast"}/>
         {this.state.showLoading && <ProgressView/> }
         <DatePickerDialog ref="dobDialog" onDatePicked={this.onDatePicked.bind(this)} />
+        {<CustomDialog okText = {this.state.okText} cancelText = {this.state.cancelText} message = {this.state.dialogMsg} onOkPress = {() => {this.onDialogOkClick()}} onCancelPress = {() => {this.onDialogSkipClick()}} visibility = {this.state.showDialog}/>}
+        {<CustomDialogImagePicker onChooseOption = {(option) => {this.onOptionSelected(option)}} onCancelPress = {() => {this.hidePickerAlert()}} visibility = {this.state.showPickerDialog}/>}
         </AppContext.Provider>
       )
     }

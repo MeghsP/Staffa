@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet,AsyncStorage,Modal,ToastAndroid, Text, Dimensions,View, Image,FlatList,TouchableOpacity,TouchableWithoutFeedback} from 'react-native';
+import {Platform, StyleSheet,Modal, Text, Dimensions,View, Image,FlatList,TouchableOpacity,TouchableWithoutFeedback} from 'react-native';
 import Colors from '../../utils/res/Colors';
 import Strings from '../../utils/res/Strings';
 import Styles from '../../utils/res/Styles';
-type Props = {};
 
 export default class CustomDialog extends Component<Props>
 {
@@ -11,14 +10,28 @@ export default class CustomDialog extends Component<Props>
         super(args);
         let { width } = Dimensions.get("window");
         let { height } = Dimensions.get("window");
-        apiService = new ApiService();
         this.state = {
            screenWidth: width,
            screenHeight: height,
-           okButtonText:(this.props.okText != null && this.props.okText != "") ? this.props.okText : "ADD FUND",
-           cancelButtonText:(this.props.cancelText != null && this.props.cancelText != "") ? this.props.cancelText : "SKIP",
-           showCancelButton:(this.props.showCancel != undefined && this.props.showCancel != null) ? this.props.showCancel : true,
+           okButtonText:Strings.dialogButtonOK,
+           cancelButtonText:Strings.dialogButtonCancel,
+           showCancelButton:true,
         }
+      }
+
+      componentWillMount(){
+        if(this.props.cancelText != null && this.props.cancelText != ""){
+          this.setState({cancelButtonText:this.props.cancelText});
+        }
+
+        if(this.props.okText != null && this.props.okText != ""){
+          this.setState({okButtonText:this.props.okText});
+        }
+
+        if(this.props.showCancel && this.props.showCancel === false){
+          this.setState({showCancelButton:this.props.showCancel});
+        }
+        
       }
 
       onDialogSkipClick = () => {

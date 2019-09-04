@@ -176,6 +176,78 @@ module.exports = StyleSheet.create({
     color:Colors.mediumGray
   },
 
+  LeftDrawerRootViewStyle: {
+    height:windowHeight,
+    width:280, 
+    position:'absolute', 
+    alignItems: 'center', 
+    backgroundColor:Colors.white
+  },
+
+  LeftDrawerImageStyle: {
+    height:100, 
+    width: 100,
+    borderColor:Colors.black,
+    borderWidth:1,
+    borderRadius:50, 
+    alignSelf: 'center',
+    marginTop:20
+  },
+
+  LeftDrawerUserNameTextStyle: {
+    fontSize:13,
+    marginTop:2,
+    color:Colors.black
+  },
+
+  LeftDrawerCloseImageStyle: {
+    height:20,
+    width:20,
+    position:'absolute',
+    left:20,
+    top:15
+  },
+
+  LeftDrawerModelViewStyle: {
+    width:windowWidth, 
+    height: windowHeight,
+    position:'absolute',
+    backgroundColor:Colors.alertTransparentColor
+  },
+
+  
+  LeftDrawerOptionsDividerStyle: {
+    height:1,
+    backgroundColor:Colors.lightGray
+  },
+
+  LeftDrawerOptionsViewStyle: {
+    width:280,
+    backgroundColor:Colors.white,
+    padding: 15,
+    flexDirection:'row'
+  },
+
+  ProfileOptionsViewStyle: {
+    width:windowWidth,
+    backgroundColor:Colors.white,
+    padding: 15,
+    flexDirection:'row'
+  },
+
+  LeftDrawerOptionsTextStyle: {
+    fontSize:16,
+    flex:1,
+    color:Colors.black,
+    marginLeft:10,
+    marginRight:10,
+  },
+
+  LeftDrawerOptionsIconStyle: {
+    width:30,
+    height:30,
+  },
+
 
   container: { width:windowWidth,flex: 1,backgroundColor: Colors.appBGColor},
 

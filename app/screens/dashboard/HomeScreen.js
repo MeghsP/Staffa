@@ -1,24 +1,42 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Image,Dimensions,TouchableOpacity,Button} from 'react-native';
+import {Text, View} from 'react-native';
+import Header from '../../utils/header';
+import {AppConsumer} from '../../context/AppProvider';
 
-type Props = {};
+
 export default class HomeScreen extends Component {
  constructor(args) {
    super(args);
-   let { width } = Dimensions.get("window");
    this.state = {
-      screenWidth: width,
-      isUserLoggedIn:false,
     }
  }
+
+ componentDidMount(){
+   this.context.setCurrentContext(this);
+ }
  
+ toggleDrawer = () => {
+  this.context.toggleDrawer(true)
+ }
  render() {
+    const platformHeaderProps = {}
+    platformHeaderProps['leftItem'] = {
+      title: 'Menu',
+      icon: require('../../images/menu.png'),
+      layout: 'icon',
+      onPress: this.toggleDrawer
+    }
    return (
-     <View style={Styles.root}>
-        <View style = {Styles.baseStyle1}>
-            <Text style = {Styles.splashLogoTextStyle}>Welcome to STAFFA</Text>
-        </View>
-     </View>
+    <AppConsumer>
+    {(context) => (
+      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
+          <Header title="Home" {...platformHeaderProps} />
+          <View style = {context.utilities.styles.baseStyle1}>
+              <Text style = {context.utilities.styles.splashLogoTextStyle}>Welcome to STAFFA</Text>
+          </View>
+      </View>
+     )}
+     </AppConsumer> 
    );
  }
 }

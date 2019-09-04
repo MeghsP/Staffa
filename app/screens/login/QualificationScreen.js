@@ -1,112 +1,61 @@
 import React, {Component} from 'react';
-import {Text,View,TextInput,ScrollView,Dimensions,TouchableOpacity} from 'react-native';
-import Colors from '../../utils/res/Colors';
-import Styles from '../../utils/res/Styles';
-import Strings from '../../utils/res/Strings';
-import CustomDialogImagePicker from '../../customViews/dialog/CustomDialogImagePicker';
-import ImagePicker from 'react-native-image-crop-picker';
-import Toast, {DURATION} from 'react-native-easy-toast';
-import ProgressView from '../../customViews/ProgressView';
-import ApiService from '../../network/ApiService';
+import {Text,View,TextInput,ScrollView,TouchableOpacity} from 'react-native';
+import {AppConsumer} from '../../context/AppProvider'; 
 
 export default class QualificationScreen extends Component {
  constructor(args) {
    super(args);
-   apiService = new ApiService();
-   let { width } = Dimensions.get("window");
    this.state = {
-      screenWidth: width,
       totalData:[{id:1, name:'',doc:'',docURL:''}],
-      showPickerDialog:false,
       name:'',
-      avatarSource:'',
       selectedData:'',
       selectedIndex:'',
-      isLoading:false,
     }
  }
- onOptionSelected(option){
-  this.hidePickerAlert();
-  if (option == 0) {
-    this.onCameraClick();
-  } else {
-    this.onGalleryClick();
-  }
-}
-onCameraClick(){
-  ImagePicker.openCamera({
-    width: 500,
-    height: 500,
-    cropping: true
-  }).then(image => {
-    console.log(image);
-    console.log("Image.path : "+image.path);
-    this.setState({avatarSource : image.path });
-    this.updateTotalData(image);
-  });
-}
-
-onGalleryClick(){
-  ImagePicker.openPicker({
-    width: 500,
-    height: 500,
-    cropping: true
-  }).then(image => {
-    console.log("Image : "+image);
-    console.log("Image.path : "+image.path);
-    this.setState({avatarSource : image.path });
-    this.updateTotalData(image);
-  });
-}
-
-updateTotalData(image){
-  var data = this.state.selectedData;
-  data.doc = image.path;
-  var allData = this.state.totalData;
-  allData[this.state.selectedIndex] = data;
-  this.setState({totalData : allData });
-  console.log('updateTotalData array : ' + JSON.stringify(this.state.totalData));
-}
-hidePickerAlert(){
-  this.setState({showPickerDialog: false});
-}
-
 
  onScanClick(){
   
  }
 
+ updateTotalData(image){
+  var data = this.state.selectedData;
+  data.doc = image;
+  var allData = this.state.totalData;
+  allData[this.state.selectedIndex] = data;
+  this.setState({totalData : allData });
+  console.log('updateTotalData array : ' + JSON.stringify(this.state.totalData));
+}
+
  onUploadClick(data, index){
-  this.setState({showPickerDialog:true});
   this.setState({selectedData:data});
   this.setState({selectedIndex:index});
+  this.context.showImagePickerAlert((image) => {
+    this.updateTotalData(image);
+  });
  }
 
  onNextClick(){
-  //  var qualifications = [];
-  // this.state.totalData.map(() => {
-  //   qualifications.push
-  // });
   console.log('onNextClick array : ' + JSON.stringify(this.state.totalData));
   var allData = this.state.totalData;
   console.log('onNextClick length : ' + allData.length);
   var previousEntry = allData[allData.length - 1];
   if(previousEntry.name === ""){
-    this.refs.toast.show("Please enter name for previous document");
+    this.context.showToast("Please enter name for previous document");
   }  
   if(previousEntry.doc === ""){
-    this.refs.toast.show("Please upload doc for previous document");
+    this.context.showToast("Please upload doc for previous document");
     return;
   }
   allData[this.state.totalData.length - 1] = previousEntry;
   console.log('onAddClick joined : ' + JSON.stringify(allData));
   this.setState({ totalData: allData });
 
-  this.setState({ isLoading: true });
+  this.context.showLoading(true);
   var allData =  this.state.totalData;
   allData.map((data,index) => {
     if(data.doc.length > 0){
-      apiService.uploadImage(Strings.FS_FILE_DIR_QUALIfICATION,data.doc,(error, response) => {
+      var filePath = this.context.currentUser.uid +"/"+this.context.utilities.strings.FS_FILE_DIR_QUALIfICATION;
+      this.context.apiService.uploadImage(filePath,data.doc,(error, response) => {
         console.log("onNextClick response : " + response);
         console.log("onNextClick error : " + error);
         if(response.length > 0){
@@ -119,10 +68,9 @@ hidePickerAlert(){
               qualification:{
                 data:allData
             }};
-            apiService.updateFirestoreData(myData);
-            this.setState({isLoading:false});
-            var {navigate} = this.props.navigation;
-            navigate("CertificateScreen");
+            this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,myData);
+            this.context.showLoading(false);
+            this.context.replaceScreen(this,this.context.utilities.strings.APP_SCREEN_CERTIFICATE);
           }
           
         }
@@ -130,17 +78,18 @@ hidePickerAlert(){
     }
   });
  }
+
  onAddClick(){
   console.log('onAddClick array : ' + JSON.stringify(this.state.totalData));
   var allData = this.state.totalData;
   console.log('onAddClick length : ' + allData.length);
   var previousEntry = allData[allData.length - 1];
   if(previousEntry.name === ""){
-    this.refs.toast.show("Please enter name for previous document");
+    this.context.showToast("Please enter name for previous document");
     return;
   }
   if(previousEntry.doc === ""){
-    this.refs.toast.show("Please upload doc for previous document");
+    this.context.showToast("Please upload doc for previous document");
     return;
   }
   allData[this.state.totalData.length - 1] = previousEntry;
@@ -159,22 +108,23 @@ hidePickerAlert(){
 
  render() {
    return (
-     <View style={Styles.root}>
-        <View style={{alignItems:'center', marginTop:10, width:this.state.screenWidth}}>
-            <Text style = {Styles.headerLogoTextStyle}>{Strings.appName}</Text>
-            <Text style = {Styles.headerInfoTextStyle}>Qualifications</Text>
+    <AppConsumer>
+    {(context) => (
+     <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
+        <View style={{alignItems:'center', marginTop:10, width:context.screenWidth}}>
+            <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
+            <Text style = {context.utilities.styles.headerInfoTextStyle}>Qualifications</Text>
         </View>
-        <View style = {Styles.baseStyle1}>
-            <Text style = {[Styles.NewToAppTextStyle,{marginTop:10}]}>Upload your qualifications for Employers to view</Text>
+        <View style = {context.utilities.styles.baseStyle1}>
+            <Text style = {[context.utilities.styles.NewToAppTextStyle,{marginTop:10}]}>Upload your qualifications for Employers to view</Text>
             <ScrollView>
             {
               this.state.totalData.map((data,index) => {
                 return (
                   <View>
-                    <View style = {Styles.InputTextBoxStyle}>
+                    <View style = {context.utilities.styles.InputTextBoxStyle}>
                       <TextInput
-                          ref = 'inputUsername'
-                          style = {data.name === '' ? Styles.InputTextDisableStyle : Styles.InputTextEnableStyle}
+                          style = {data.name === '' ? context.utilities.styles.InputTextDisableStyle : context.utilities.styles.InputTextEnableStyle}
                           placeholder = "Name of Qualification"
                           // onChangeText = {(text) => {this.setState({name:text})}}
                           onChangeText = {(text) => {
@@ -182,17 +132,17 @@ hidePickerAlert(){
                           }}
                           returnKeyType= { "done" }
                           underlineColorAndroid='transparent'
-                          placeholderTextColor={Colors.hintColor}
+                          placeholderTextColor={context.utilities.colors.hintColor}
                           textAlign={'center'}
                           value = {data.name}
                       />
                     </View>
                     <View style={{flexDirection:'row'}}>
                       <TouchableOpacity onPress={() => {}}>
-                        <Text style = {[Styles.LoginButtonEnableTextStyle,{width:90,marginTop:5,borderRadius:10, height:50}]}>Scan</Text>
+                        <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle,{width:90,marginTop:5,borderRadius:10, height:50}]}>Scan</Text>
                       </TouchableOpacity>
                       <TouchableOpacity onPress={() => {this.onUploadClick(data, index)}}>
-                        <Text style = {[Styles.LoginButtonEnableTextStyle,{width:90,marginTop:5, borderRadius:10, height:50}]}>Upload</Text>
+                        <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle,{width:90,marginTop:5, borderRadius:10, height:50}]}>Upload</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -201,16 +151,15 @@ hidePickerAlert(){
             }
             </ScrollView>
         </View>
-            <TouchableOpacity style = {{width:this.state.screenWidth}} onPress={ () => this.onAddClick()}>
-              <Text style = {[Styles.LoginButtonEnableTextStyle, {marginTop:30}]}>ADD QUALIFICATION</Text>
+            <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onAddClick()}>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:30}]}>ADD QUALIFICATION</Text>
             </TouchableOpacity>
-            <TouchableOpacity style = {{width:this.state.screenWidth}} onPress={ () => this.onNextClick()}>
-              <Text style = {[Styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>NEXT</Text>
+            <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onNextClick()}>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>NEXT</Text>
             </TouchableOpacity>
-            {this.state.isLoading && <ProgressView/> }
-            <Toast ref="toast"/>
-            {<CustomDialogImagePicker onChooseOption = {(option) => {this.onOptionSelected(option)}} onCancelPress = {() => {this.hidePickerAlert()}} visibility = {this.state.showPickerDialog}/>}
      </View>
+     )} 
+     </AppConsumer>
    );
  }
 }

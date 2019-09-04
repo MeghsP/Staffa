@@ -26,6 +26,7 @@ import SuccessScreen from './app/screens/login/SuccessScreen';
 import VerifyMobileNumberScreen from './app/screens/login/VerifyMobileNumberScreen';
 
 import HomeScreen from './app/screens/dashboard/HomeScreen';
+import ProfileScreen from './app/screens/dashboard/ProfileScreen';
 
 let RootStack = createStackNavigator({
     SplashScreen: {screen : SplashScreen},
@@ -51,6 +52,7 @@ let RootStack = createStackNavigator({
       VerifyMobileNumberScreen:{screen:VerifyMobileNumberScreen},
 
       HomeScreen:{screen:HomeScreen},
+      ProfileScreen:{screen:ProfileScreen},
   },
   {
       initialRouteName: 'SplashScreen',

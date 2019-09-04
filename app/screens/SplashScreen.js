@@ -11,7 +11,7 @@ export default class SplashScreen extends Component {
  componentDidMount(){
   this.timeoutHandle = setTimeout(()=>{
     this.context.replaceScreen(this, this.context.currentScreen);
-  }, 2500);
+  }, 3000);
  }
 
  componentWillUnmount() {
