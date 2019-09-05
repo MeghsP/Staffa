@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Text,View,TextInput,TouchableOpacity, Image} from 'react-native';
-import {AppConsumer} from '../../context/AppProvider'; 
+import {AppConsumer} from '../../../context/AppProvider'; 
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 export default class AddAddressScreen extends Component {
@@ -106,7 +106,7 @@ export default class AddAddressScreen extends Component {
        <View style={{marginTop:10, flexDirection:'row'}}>
          {this.state.isDataAvailable && 
             <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
-              <Image source={require('../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
+              <Image source={require('../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
             </TouchableOpacity>
           }
           <View style={{alignItems:'center', flex:1}} >

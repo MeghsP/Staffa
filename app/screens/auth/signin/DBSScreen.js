@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Text, View,TouchableOpacity} from 'react-native';
+import {Text,Image, View,TouchableOpacity} from 'react-native';
 import {CheckBox} from 'react-native-elements';
-import {AppConsumer} from '../../context/AppProvider'; 
+import {AppConsumer} from '../../../context/AppProvider'; 
 
 export default class DBSScreen extends Component {
  constructor(args) {
@@ -9,12 +9,20 @@ export default class DBSScreen extends Component {
    this.state = {
       // docType:Strings.DOC_TYPE[0].name,
       avatarSource:'',
-      checked1:false,
+      isDocAvailable:false,
       checked2:false,
       
     }
  }
 
+ componentDidMount(){
+  if(this.context.userData && this.context.userData.dbsDocument){
+   var data = this.context.userData.dbsDocument;
+   this.setState(data);
+   this.setState({isDataAvailable:true});
+   this.setState({checked2:false});
+  }
+}
 
 
  onScanClick(){
@@ -28,15 +36,14 @@ export default class DBSScreen extends Component {
  }
 
  onNextClick(){
-  if(this.state.checked1 === false && this.state.checked2 === false){
+  if(this.state.isDocAvailable === false && this.state.checked2 === false){
     this.context.showToast("Please select option");
     return;
   }
   if(this.state.checked2){
-      var isDocAvailable = false;
       var data =  {
         dbsDocument:{
-          isDocAvailable:isDocAvailable
+          isDocAvailable:false
       }};
       this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, data);
       this.context.replaceScreen(this,this.context.utilities.strings.APP_SCREEN_QUALIFICATION)
@@ -52,7 +59,7 @@ export default class DBSScreen extends Component {
       console.log("onNextClick error : " + error);
       if(response.length > 0){
         var isDocAvailable = false;
-        if(this.state.checked1){
+        if(this.state.isDocAvailable){
           isDocAvailable = true;
         }
         var data =  {
@@ -62,7 +69,12 @@ export default class DBSScreen extends Component {
         }};
         this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, data);
         this.context.showLoading(false);
-        this.context.replaceScreen(this,this.context.utilities.strings.APP_SCREEN_QUALIFICATION)
+        if(this.state.isDataAvailable){
+          this.context.userData.dbsDocument = data.dbsDocument;
+          this.context.goBack(this);
+        } else {
+          this.context.replaceScreen(this,this.context.utilities.strings.APP_SCREEN_QUALIFICATION);
+        }
       } else {
         this.context.showToast("File not uploaded");
       }
@@ -76,10 +88,17 @@ export default class DBSScreen extends Component {
     <AppConsumer>
     {(context) => (
      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
-        <View style={{alignItems:'center', marginTop:10, width:context.screenWidth}}>
+        <View style={{marginTop:10, flexDirection:'row'}}>
+          {this.state.isDataAvailable && 
+            <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
+              <Image source={require('../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
+            </TouchableOpacity>
+          }
+          <View style={{alignItems:'center', flex:1}} >
             <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
             <Text style = {context.utilities.styles.headerInfoTextStyle}>DBS</Text>
-        </View>
+          </View>
+        </View>  
         <View style = {context.utilities.styles.baseStyle1}>
             <Text style = {[context.utilities.styles.NewToAppTextStyle,{marginTop:30, marginLeft:50, marginRight:50, fontSize:15}]}>Do you have current valid DBS certificate that is no more than 2 years old?</Text>
             <View style = {{flexDirection:'row',marginLeft:40, marginRight:40}}>
@@ -88,8 +107,8 @@ export default class DBSScreen extends Component {
                 checkedColor={context.utilities.colors.appColor}
                 containerStyle = {[context.utilities.styles.CheckBoxLeftContainerStyle, {flex:1}]}
                 textStyle = {[context.utilities.styles.CheckBoxTextStyle]}
-                checked={this.state.checked1}
-                onPress={() => {this.setState({checked1: !this.state.checked1});
+                checked={this.state.isDocAvailable}
+                onPress={() => {this.setState({isDocAvailable: !this.state.isDocAvailable});
                                 if(this.state.checked2){
                                   this.setState({checked2: false})
                                 }
@@ -102,29 +121,28 @@ export default class DBSScreen extends Component {
                   textStyle = {[context.utilities.styles.CheckBoxTextStyle]}
                   checked={this.state.checked2}
                   onPress={() => {this.setState({checked2: !this.state.checked2});
-                                    if(this.state.checked1){
-                                      this.setState({checked1: false})
+                                    if(this.state.isDocAvailable){
+                                      this.setState({isDocAvailable: false})
                                     }
                                   }}
               />
             </View>          
-            {this.state.checked1 && 
+            {this.state.isDocAvailable && 
               <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onScanClick()}>
                 <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:30}]}>Scan DBS Certificate</Text>
               </TouchableOpacity>
             }
-            {this.state.checked1 &&
+            {this.state.isDocAvailable &&
               <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onUploadClick()}>
                 <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10}]}>Upload DBS Certificate</Text>
               </TouchableOpacity>
             }
 
             <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onNextClick()}>
-              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:70, marginBottom:30}]}>NEXT</Text>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:70, marginBottom:30}]}>{this.state.isDataAvailable ? 'UPDATE' :  "NEXT"}</Text>
             </TouchableOpacity>
-
         </View>
-     </View>
+        </View>
      )} 
      </AppConsumer>
    );

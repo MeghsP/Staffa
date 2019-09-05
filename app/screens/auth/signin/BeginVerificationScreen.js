@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { Text, View,ScrollView, TouchableOpacity} from 'react-native';
-import {AppConsumer} from '../../context/AppProvider'; 
+import {AppConsumer} from '../../../context/AppProvider'; 
 
 export default class BeginVerificationScreen extends Component {
  constructor(args) {

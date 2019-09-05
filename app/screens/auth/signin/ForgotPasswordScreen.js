@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Text, View,TextInput,TouchableOpacity} from 'react-native';
-import {AppConsumer} from '../../context/AppProvider'; 
-import ApiService from '../../network/ApiService';
+import {AppConsumer} from '../../../context/AppProvider'; 
+import ApiService from '../../../network/ApiService';
 
 export default class ForgotPasswordScreen extends Component {
  constructor(args) {

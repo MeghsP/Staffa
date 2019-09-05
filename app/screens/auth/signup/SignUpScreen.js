@@ -3,8 +3,8 @@ import {Text,Picker, View,TextInput,ScrollView,TouchableOpacity} from 'react-nat
 import {CheckBox} from 'react-native-elements';
 import moment from 'moment';
 
-import {AppConsumer} from '../../context/AppProvider'; 
-import ApiService from '../../network/ApiService';
+import {AppConsumer} from '../../../context/AppProvider'; 
+import ApiService from '../../../network/ApiService';
 
 export default class SignUpScreen extends Component {
  constructor(args) {

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Text,View,TouchableOpacity} from 'react-native';
-import {AppConsumer} from '../../context/AppProvider'; 
+import {AppConsumer} from '../../../context/AppProvider'; 
 
 export default class SuccessScreen extends Component {
  constructor(args) {

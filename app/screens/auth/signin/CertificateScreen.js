@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
-import {Text,View,ScrollView, TouchableOpacity} from 'react-native';
+import {Text,View,ScrollView,Image, TouchableOpacity} from 'react-native';
 import {CheckBox} from 'react-native-elements';
-import {AppConsumer} from '../../context/AppProvider'; 
+import {AppConsumer} from '../../../context/AppProvider'; 
 
 export default class CertificateScreen extends Component {
  constructor(args) {
    super(args);
    this.state = {
-      totalData:[{id:1,name:'Moving &amp; Handling', checked:false},
+      data:[{id:1,name:'Moving &amp; Handling', checked:false},
                   {id:2,name:'Healthy &amp; Safety', checked:false},
                   {id:3,name:'infection Control', checked:false},
                   {id:4,name:'Medication Administration', checked:false},
@@ -23,23 +23,35 @@ export default class CertificateScreen extends Component {
     }
  }
 
+ componentDidMount(){
+  if(this.context.userData && this.context.userData.cartificates){
+   var data = this.context.userData.cartificates;
+   this.setState(data);
+   this.setState({isDataAvailable:true});
+  }
+ } 
+
  onNextClick(){
   var data =  {
     cartificates:{
-      data:this.state.totalData
+      data:this.state.data
   }};
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data); 
-  this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_REFERENCES); 
+  if(this.state.isDataAvailable){
+    this.context.userData.cartificates = data.cartificates;
+    this.context.goBack(this);
+  } else {
+    this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_REFERENCES); 
+  }  
  }
  onCheck(index){
-  var joined = this.state.totalData;
+  var joined = this.state.data;
   if(joined[index].checked){
     joined[index].checked = false;
   } else {
     joined[index].checked = true;
   }
-  
-  this.setState({ totalData: joined })
+  this.setState({ data: joined })
  }
 
  render() {
@@ -47,15 +59,22 @@ export default class CertificateScreen extends Component {
     <AppConsumer>
     {(context) => (
      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
-        <View style={{alignItems:'center', marginTop:10, width:context.screenWidth}}>
+        <View style={{marginTop:10, flexDirection:'row'}}>
+          {this.state.isDataAvailable && 
+            <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
+              <Image source={require('../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
+            </TouchableOpacity>
+          }
+          <View style={{alignItems:'center', flex:1}} >
             <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
             <Text style = {context.utilities.styles.headerInfoTextStyle}>Your Certificates</Text>
+          </View>  
         </View>
         <View style = {context.utilities.styles.baseStyle1}>
             <Text style = {[context.utilities.styles.NewToAppTextStyle,{marginTop:10,marginLeft:40, marginRight:40}]}>Please tick to confirm that you have the following up to date certifications</Text>
             <ScrollView>
             {
-              this.state.totalData.map((data,index) => {
+              this.state.data.map((data,index) => {
                 return (
                   <View>
                     <CheckBox
@@ -74,7 +93,7 @@ export default class CertificateScreen extends Component {
         </View>
         <Text style = {[context.utilities.styles.NewToAppTextStyle,{marginTop:20, color:context.utilities.colors.red}]}>Click on the title to upload of scan your certificate</Text>
             <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onNextClick()}>
-              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>NEXT</Text>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>{this.state.isDataAvailable ? 'UPDATE' :  "NEXT"}</Text>
             </TouchableOpacity>
      </View>
      )} 
