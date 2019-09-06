@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {Text, View, TouchableWithoutFeedback} from 'react-native';
-import Header from '../../utils/header';
-import {AppConsumer} from '../../context/AppProvider';
+import Header from '../../../utils/header';
+import {AppConsumer} from '../../../context/AppProvider';
 import { ScrollView } from 'react-native-gesture-handler';
-import Strings from '../../utils/res/Strings';
+import Strings from '../../../utils/res/Strings';
 
 const PROFILE_OPTIONS = [
   {name:"Basic Settings", screen:Strings.APP_SCREEN_PROFILE},
@@ -42,7 +42,7 @@ export default class ProfileScreen extends Component {
     const platformHeaderProps = {}
     platformHeaderProps['leftItem'] = {
       title: 'Menu',
-      icon: require('../../images/back.png'),
+      icon: require('../../../images/back.png'),
       layout: 'icon',
       onPress: this.onBackPress
     }

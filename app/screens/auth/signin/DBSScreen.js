@@ -18,9 +18,12 @@ export default class DBSScreen extends Component {
  componentDidMount(){
   if(this.context.userData && this.context.userData.dbsDocument){
    var data = this.context.userData.dbsDocument;
-   this.setState(data);
+   if(data.isDocAvailable){
+    this.setState({isDocAvailable:true});
+   } else {
+    this.setState({checked2:true});
+   }
    this.setState({isDataAvailable:true});
-   this.setState({checked2:false});
   }
 }
 
@@ -46,7 +49,7 @@ export default class DBSScreen extends Component {
           isDocAvailable:false
       }};
       this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, data);
-      this.context.replaceScreen(this,this.context.utilities.strings.APP_SCREEN_QUALIFICATION)
+      this.moveToNextScreen(data);
   } else {
     if(this.state.avatarSource === ""){
       this.context.showToast("Please select DBS document");
@@ -58,29 +61,29 @@ export default class DBSScreen extends Component {
       console.log("onNextClick response : " + response);
       console.log("onNextClick error : " + error);
       if(response.length > 0){
-        var isDocAvailable = false;
-        if(this.state.isDocAvailable){
-          isDocAvailable = true;
-        }
         var data =  {
           dbsDocument:{
-            isDocAvailable:isDocAvailable,
+            isDocAvailable:true,
             docURL:response
         }};
         this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, data);
         this.context.showLoading(false);
-        if(this.state.isDataAvailable){
-          this.context.userData.dbsDocument = data.dbsDocument;
-          this.context.goBack(this);
-        } else {
-          this.context.replaceScreen(this,this.context.utilities.strings.APP_SCREEN_QUALIFICATION);
-        }
+        this.moveToNextScreen(data);
       } else {
         this.context.showToast("File not uploaded");
       }
     })
   }
   
+ }
+
+ moveToNextScreen(data) {
+  if(this.state.isDataAvailable){
+    this.context.userData.dbsDocument = data.dbsDocument;
+    this.context.goBack(this);
+  } else {
+    this.context.replaceScreen(this,this.context.utilities.strings.APP_SCREEN_QUALIFICATION);
+  }
  }
 
  render() {

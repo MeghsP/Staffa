@@ -75,11 +75,11 @@ export default class VerificationScreen extends Component {
   })
  }
 
- updateData(){
+ updateData(url){
   var data =  {
     docVerification:{
       docType:this.state.docType,
-      docURL:response
+      docURL:url
   }};
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, data);
   this.context.showLoading(false);
