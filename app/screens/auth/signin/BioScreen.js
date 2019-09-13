@@ -90,8 +90,9 @@ export default class BioScreen extends Component {
   }};
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data);
   this.context.showLoading(false);
+  this.context.updateUserData();
   if(this.state.isDataAvailable){
-    this.context.userData.bio = data.bio;
+    // this.context.userData.bio = data.bio;
     this.context.goBack(this);
   } else {
     this.context.replaceScreen(this,this.context.utilities.strings.APP_SCREEN_SUCCESS);

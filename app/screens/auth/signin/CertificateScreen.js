@@ -37,8 +37,9 @@ export default class CertificateScreen extends Component {
       data:this.state.data
   }};
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data); 
+  this.context.updateUserData();
   if(this.state.isDataAvailable){
-    this.context.userData.cartificates = data.cartificates;
+    // this.context.userData.cartificates = data.cartificates;
     this.context.goBack(this);
   } else {
     this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_REFERENCES); 

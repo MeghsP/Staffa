@@ -83,8 +83,9 @@ export default class VerificationScreen extends Component {
   }};
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, data);
   this.context.showLoading(false);
+  this.context.updateUserData();
   if(this.state.isDataAvailable){
-    this.context.userData.docVerification = data.docVerification;
+    // this.context.userData.docVerification = data.docVerification;
     this.context.goBack(this);
   } else {
     this.context.replaceScreen(this,this.context.utilities.strings.APP_SCREEN_DBS)
@@ -129,8 +130,8 @@ export default class VerificationScreen extends Component {
             </View>          
 
             <View style={{margin:30, height:200, width:context.screenWidth - 60, borderColor:context.utilities.colors.black,borderWidth:1, borderRadius:1}}>
-                {this.state.avatarSource !== "" &&
-                  <Image style={{width:context.screenWidth - 64, height: 200}} source={{uri:this.state.avatarSource}} />
+                {(this.state.avatarSource !== "" || this.state.docURL !== "") &&
+                  <Image style={{width:context.screenWidth - 64, height: 200}} source={{uri:this.state.avatarSource.length > 0 ?  this.state.avatarSource : this.state.docURL}} />
                 }
             </View>
             <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onScanClick()}>

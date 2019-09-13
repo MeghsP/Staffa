@@ -22,11 +22,14 @@ import CertificateScreen from './app/screens/auth/signin/CertificateScreen';
 import ReferencesScreen from './app/screens/auth/signin/ReferencesScreen';
 import SkillsScreen from './app/screens/auth/signin/SkillsScreen';
 import BioScreen from './app/screens/auth/signin/BioScreen';
+import BasicInfoScreen from './app/screens/auth/signin/BasicInfoScreen';
 import SuccessScreen from './app/screens/auth/signin/SuccessScreen';
 import VerifyMobileNumberScreen from './app/screens/auth/signin/VerifyMobileNumberScreen';
 
 import HomeScreen from './app/screens/dashboard/HomeScreen';
-import ProfileScreen from './app/screens/dashboard/ProfileScreen';
+import ProfileScreen from './app/screens/dashboard/drawer/ProfileScreen';
+import MessagesScreen from './app/screens/dashboard/drawer/MessagesScreen';
+import ChatScreen from './app/screens/dashboard/drawer/messageComponents/ChatScreen';
 
 let RootStack = createStackNavigator({
     SplashScreen: {screen : SplashScreen},
@@ -50,9 +53,12 @@ let RootStack = createStackNavigator({
       BioScreen:{screen:BioScreen},
       SuccessScreen:{screen:SuccessScreen},
       VerifyMobileNumberScreen:{screen:VerifyMobileNumberScreen},
+      BasicInfoScreen:{screen:BasicInfoScreen},
 
       HomeScreen:{screen:HomeScreen},
       ProfileScreen:{screen:ProfileScreen},
+      MessagesScreen:{screen:MessagesScreen},
+      ChatScreen:{screen:ChatScreen},
   },
   {
       initialRouteName: 'SplashScreen',

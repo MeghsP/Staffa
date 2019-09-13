@@ -31,9 +31,10 @@ export default class InfoSharingScreen extends Component {
       checked3: this.state.checked3,
       checked4:this.state.checked4
   }};
-  this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data); 
+  this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data);
+  this.context.updateUserData(); 
   if(this.state.isDataAvailable){
-    this.context.userData.infoSharing = data.infoSharing;
+    // this.context.userData.infoSharing = data.infoSharing;
     this.context.goBack(this);
   } else {
     this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_NOTIFICATION); 

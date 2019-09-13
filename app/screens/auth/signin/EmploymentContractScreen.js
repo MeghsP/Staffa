@@ -27,8 +27,9 @@ export default class EmploymentContractScreen extends Component {
     
     var data = {isEmploymentAccepted:this.state.isEmploymentAccepted};
     this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data); 
+    this.context.updateUserData();
     if(this.state.isDataAvailable){
-      this.context.userData.isEmploymentAccepted = data.isTermsAccepted;
+      // this.context.userData.isEmploymentAccepted = data.isTermsAccepted;
       this.context.goBack(this);
     } else {
       this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_PRIVACY); 

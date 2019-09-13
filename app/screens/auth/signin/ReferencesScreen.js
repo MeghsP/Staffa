@@ -29,19 +29,41 @@ componentDidMount(){
   }
  } 
 
- onScanClick(){
-  
+ onScanClick(data, index){
+  this.setState({selectedData:data});
+  this.setState({selectedIndex:index});
+  this.context.openCamera((image) => {
+    this.updateTotalData(image);
+  });
  }
 
  onUploadClick(data, index){
   this.setState({selectedData:data});
   this.setState({selectedIndex:index});
-  this.context.showImagePickerAlert((image) => {
+  this.context.openGallery((image) => {
     this.updateTotalData(image);
   });
  }
 
- async onNextClick(){
+ updateFirestoreData(allData){
+  setTimeout(()=>{
+    var myData = {
+      references: {
+        data: allData
+      }
+    };
+    this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, myData);
+    this.context.showLoading(false);
+    this.context.updateUserData();
+    if (this.state.isDataAvailable) {
+      this.context.goBack(this);
+    } else {
+      this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_CERTIFICATE);
+    }
+  }, 3000);
+ }
+
+ onNextClick(){
   console.log('onNextClick array : ' + JSON.stringify(this.state.data));
   var allData = this.state.data;
   console.log('onNextClick length : ' + allData.length);
@@ -49,7 +71,7 @@ componentDidMount(){
   if(previousEntry.name === ""){
     this.context.showToast("Please enter name for previous document");
   }  
-  if(previousEntry.doc === "" || previousEntry.docURL === ""){
+  if(previousEntry.doc === "" && previousEntry.docURL === ""){
     this.context.showToast("Please upload doc for previous document");
     return;
   }
@@ -61,57 +83,27 @@ componentDidMount(){
   var allData =  this.state.data;
   allData.map((data,index) => {
     if(data.doc.length > 0){
-      var imageURL = await this.uploadImage(data.doc);
-      allData[index].docURL = imageURL;
-    }
-    allData[index].doc = "";
-    if(index === allData.length - 1){
-      this.setState({ isLoading: false });
-      var myData =  {
-        references:{
-           data:allData
-      }};
-      this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,myData);
-      this.context.showLoading(false);
-      if(this.state.isDataAvailable){
-        this.context.userData.references = data.references;
-        this.context.goBack(this);
-      } else {
-        this.context.replaceScreen(this,this.context.utilities.strings.APP_SCREEN_SKILLS);
+      var filePath = this.context.currentUser.uid +"/"+this.context.utilities.strings.FS_FILE_DIR_REFERENCES;
+      this.context.apiService.uploadImage(filePath,data.doc,(error, response) => {
+        console.log("onNextClick uploadImage response : " + response);
+        console.log("onNextClick uploadImage error : " + error);
+        console.log("onNextClick uploadImage index : " + index);
+        allData[index].docURL = response;
+        allData[index].doc = "";
+        if(index === allData.length - 1){
+          this.updateFirestoreData(allData);          
+        }
+      })
+    } else {
+      allData[index].doc = "";
+      console.log("onNextClick uploadImage else index : " + index);
+      if(index === allData.length - 1){
+        this.updateFirestoreData(allData);
       }
     }
   });
  }
 
-//  var filePath = this.context.currentUser.uid +"/"+this.context.utilities.strings.FS_FILE_DIR_REFERENCES;
-//  this.context.apiService.uploadImage(filePath,data.doc,(error, response) => {
-//    console.log("onNextClick response : " + response);
-//    console.log("onNextClick error : " + error);
-//    if(response.length > 0){
-//      data.docURL = response;
-//      allData[index].docURL = response;
-//      console.log('onAddClick response allData : ' + JSON.stringify(allData));
-//      if(index === allData.length - 1){
-//        this.setState({ isLoading: false });
-//        var myData =  {
-//          references:{
-//            data:allData
-//        }};
-//        this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,myData);
-//        this.context.showLoading(false);
-//        this.context.replaceScreen(this,this.context.utilities.strings.APP_SCREEN_SKILLS);
-//      }
-//    }
-//  })
-
- async uploadImage(doc){
-  var filePath = this.context.currentUser.uid +"/"+this.context.utilities.strings.FS_FILE_DIR_REFERENCES;
-  this.context.apiService.uploadImage(filePath,doc,(error, response) => {
-    console.log("onNextClick response : " + response);
-    console.log("onNextClick error : " + error);
-    return response;
-  })
- }
  onAddClick(){
   console.log('onAddClick array : ' + JSON.stringify(this.state.data));
   var allData = this.state.data;
@@ -121,7 +113,7 @@ componentDidMount(){
     this.context.showToast("Please enter name for previous document");
     return;
   }
-  if(previousEntry.doc === "" || previousEntry.docURL === ""){
+  if(previousEntry.doc === "" && previousEntry.docURL === ""){
     this.context.showToast("Please upload doc for previous document");
     return;
   }
@@ -177,7 +169,7 @@ componentDidMount(){
                       />
                     </View>
                     <View style={{flexDirection:'row'}}>
-                      <TouchableOpacity onPress={() => {}}>
+                      <TouchableOpacity onPress={() => {this.onScanClick(data, index)}}>
                         <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle,{width:90,marginTop:5,borderRadius:10, height:50}]}>Scan</Text>
                       </TouchableOpacity>
                       <TouchableOpacity onPress={() => {this.onUploadClick(data, index)}}>

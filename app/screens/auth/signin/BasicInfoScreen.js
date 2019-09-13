@@ -1,79 +1,68 @@
 import React, {Component} from 'react';
-import {Text,Picker, View,TextInput,ScrollView,TouchableOpacity} from 'react-native';
+import {Text,Picker, View,TextInput,ScrollView,Image, TouchableOpacity} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import moment from 'moment';
 
 import {AppConsumer} from '../../../context/AppProvider'; 
 import ApiService from '../../../network/ApiService';
 
-export default class SignUpScreen extends Component {
+export default class BasicInfoScreen extends Component {
  constructor(args) {
    super(args);
    apiService = new ApiService();
    this.state = {
       username:'',
-      password:'',
-      confirmPassword:'',
       firstName:'',
       lastName:'',
       dob:'DOB',
       dobDate:'',
       nationalIDNumber:'',
-      email:'',
       mobileNumber:'',
       regNumber:'',
       gender:'',
-      checked:false,
-      isLoading:false,
+      isSecurePay:false,
     }
     this.inputUserNameRef = React.createRef();
-    this.inputPasswordRef = React.createRef();
-    this.inputConfirmPasswordRef = React.createRef();
     this.inputFirstNameRef = React.createRef();
     this.inputLastNameRef = React.createRef();
     this.inputNationalIDRef = React.createRef();
-    this.inputEmailRef = React.createRef();
     this.inputMobileNameRef = React.createRef();
     this.inputRegNumberNameRef = React.createRef();
  }
+
+ componentDidMount(){
+  if(this.context.userData && this.context.userData.registerData){
+   var data = this.context.userData.registerData;
+   var date = new Date(data.dob.toString());
+   data.dobDate = date;
+   data.dob = moment(date).format('DD-MMM-YYYY');
+   this.setState(data);
+  }
+ } 
 
  onRegisterClick(){
   if(!this.isInputValid()){
     return;
   }
   this.context.showLoading(true);
-  apiService.signUpWithEmailPassword(this.state.email, this.state.password, (error, response) => {
-    if(response){
-      var userID =  "" + response.user.uid;
-      console.log("UserID : " + userID);
-      var data = {
-        uid:userID,
-        registerData:{
-          username:this.state.username,
-          firstName: this.state.firstName,
-          lastName: this.state.lastName,
-          dob:this.state.dobDate.toString(),
-          nationalIDNumber:this.state.nationalIDNumber,
-          mobileNumber:this.state.mobileNumber,
-          regNumber:this.state.regNumber,
-          gender:this.state.gender,
-          isSecurePay:this.state.checked
-        }
-      };
-      apiService.addFirestoreUserData(userID, data);
-      apiService.sendEmailVerification((error, response) => {
-        this.context.showLoading(false);
-        if(response){
-          this.context.replaceScreen(this,this.context.utilities.strings.APP_SCREEN_VERIFY)
-        } else {
-          this.context.showToast(error);
-        }
-      });
-    } else {
-      this.context.showLoading(false);
-      this.context.showToast(error);
+  var data = {
+    registerData:{
+      username:this.state.username,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      dob:this.state.dobDate.toString(),
+      nationalIDNumber:this.state.nationalIDNumber,
+      mobileNumber:this.state.mobileNumber,
+      regNumber:this.state.regNumber,
+      gender:this.state.gender,
+      isSecurePay:this.state.isSecurePay
     }
-  });
+  };
+  apiService.updateFirestoreUserData(this.context.currentUser.uid,data);
+  this.context.showLoading(false);
+  this.context.updateUserData();
+  this.context.userData.registerData = data.registerData;
+  this.context.goBack(this);
  }
 
  isInputValid(){
@@ -87,22 +76,6 @@ export default class SignUpScreen extends Component {
    }
    if(this.state.lastName === ""){
     this.context.showToast("Please enter last name");
-     return false;
-   }
-   if(this.state.password === ""){
-    this.context.showToast("Please enter password");
-     return false;
-   }
-   if(this.state.confirmPassword === "Please enter confirm password"){
-    this.context.showToast("");
-     return false;
-   }
-   if(this.state.password !== this.state.confirmPassword){
-    this.context.showToast("Password doesn't match");
-     return false;
-   }
-   if(this.state.email === ""){
-    this.context.showToast("Please enter email");
      return false;
    }
    if(this.state.mobileNumber === ""){
@@ -140,9 +113,14 @@ export default class SignUpScreen extends Component {
     <AppConsumer>
     {(context) => (
      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
-        <View style={{alignItems:'center', marginTop:10, width:context.screenWidth}}>
+        <View style={{marginTop:10, flexDirection:'row'}}>
+          <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
+            <Image source={require('../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
+          </TouchableOpacity>
+          <View style={{alignItems:'center', flex:1}} >
             <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
-            <Text style = {context.utilities.styles.headerInfoTextStyle}>New Account</Text>
+            <Text style = {context.utilities.styles.headerInfoTextStyle}>Basic Info</Text>
+          </View>  
         </View>
         <View style = {context.utilities.styles.baseStyle1}>
           <ScrollView>
@@ -159,36 +137,6 @@ export default class SignUpScreen extends Component {
                            textAlign={'center'}
                            value = {this.state.username}
                            onSubmitEditing = {() => {this.inputPasswordRef.current.focus()}}
-                         />
-                    </View>
-                    <View style = {[context.utilities.styles.InputTextBoxStyle, {marginTop:2}]}>
-                        <TextInput
-                           ref = {this.inputPasswordRef}
-                           style = {this.state.password === '' ? context.utilities.styles.InputTextDisableStyle : context.utilities.styles.InputTextEnableStyle}
-                           placeholder = "Password"
-                           onChangeText = {(text) => {this.setState({password:text})}}
-                           returnKeyType= { "next" }
-                           secureTextEntry = {true}
-                           underlineColorAndroid='transparent'
-                           placeholderTextColor={context.utilities.colors.hintColor}
-                           textAlign={'center'}
-                           value = {this.state.password}
-                           onSubmitEditing = {() => {this.inputConfirmPasswordRef.current.focus()}}
-                         />
-                    </View>
-                    <View style = {[context.utilities.styles.InputTextBoxStyle, {marginTop:2}]}>
-                        <TextInput
-                           ref = {this.inputConfirmPasswordRef}
-                           style = {this.state.confirmPassword === '' ? context.utilities.styles.InputTextDisableStyle : context.utilities.styles.InputTextEnableStyle}
-                           placeholder = "Confirm Password"
-                           onChangeText = {(text) => {this.setState({confirmPassword:text})}}
-                           returnKeyType= { "next" }
-                           secureTextEntry = {true}
-                           underlineColorAndroid='transparent'
-                           placeholderTextColor={context.utilities.colors.hintColor}
-                           textAlign={'center'}
-                           value = {this.state.confirmPassword}
-                           onSubmitEditing = {() => {this.inputFirstNameRef.current.focus()}}
                          />
                     </View>
                     <View style = {[context.utilities.styles.InputTextBoxStyle, {marginTop:10}]}>
@@ -240,22 +188,6 @@ export default class SignUpScreen extends Component {
                          />
                     </View>
 
-                    <View style = {[context.utilities.styles.InputTextBoxStyle, {marginTop:10}]}>
-                        <TextInput
-                           ref = {this.inputEmailRef}
-                           style = {this.state.email === '' ? context.utilities.styles.InputTextDisableStyle : context.utilities.styles.InputTextEnableStyle}
-                           placeholder = "Email"
-                           onChangeText = {(text) => {this.setState({email:text})}}
-                           returnKeyType= { "next" }
-                           keyboardType = {"email-address"}
-                           underlineColorAndroid='transparent'
-                           placeholderTextColor={context.utilities.colors.hintColor}
-                           textAlign={'center'}
-                           value = {this.state.email}
-                           onSubmitEditing = {() => {this.inputMobileNameRef.current.focus()}}
-                         />
-                    </View>
-
                     <View style = {[context.utilities.styles.InputTextBoxStyle, {marginTop:2}]}>
                         <TextInput
                            ref = {this.inputMobileNameRef}
@@ -303,12 +235,12 @@ export default class SignUpScreen extends Component {
                       checkedColor={context.utilities.colors.appColor}
                       containerStyle = {context.utilities.styles.CheckBoxContainerStyle}
                       textStyle = {[context.utilities.styles.NewToAppTextStyle,{marginTop:3}]}
-                      checked={this.state.checked}
-                      onPress={() => this.setState({checked: !this.state.checked})}
+                      checked={this.state.isSecurePay}
+                      onPress={() => this.setState({isSecurePay: !this.state.isSecurePay})}
                     />
 
                     <TouchableOpacity onPress={ () => this.onRegisterClick()}>
-                        <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {margin:10}]}>REGISTER</Text>
+                        <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {margin:10}]}>UPDATE</Text>
                     </TouchableOpacity>
               </View>   
             </ScrollView>   

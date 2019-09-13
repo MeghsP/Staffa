@@ -5,6 +5,8 @@
 const Strings = {
 
   appName:'STAFFA',
+
+  MESSAGES_TAB:["CHATS", "CONTACTS"],
   
   GENDER: [
     {name:"MALE"},
@@ -59,10 +61,13 @@ const Strings = {
   APP_SCREEN_REFERENCES:"ReferencesScreen",
   APP_SCREEN_SKILLS:"SkillsScreen",
   APP_SCREEN_BIO:"BioScreen",
+  APP_SCREEN_BASIC_INFO:"BasicInfoScreen",
   APP_SCREEN_SUCCESS:"SuccessScreen",
 
   APP_SCREEN_HOME:"HomeScreen",
   APP_SCREEN_PROFILE:"ProfileScreen",
+  APP_SCREEN_MESSAGES:"MessagesScreen",
+  APP_SCREEN_CHAT:"ChatScreen",
 
   registerNotificationMsg:'We need to notify you of compliance related matters, payments and offers relating to your vocation and aspirations. \n\n You can change this settings at any time in your device settings.',
   registerVerificationMsg:'We need to verify your identity using your government issued identification documentation.',
@@ -78,11 +83,17 @@ const Strings = {
   FS_FILE_DIR_PROFILE:"Profile",
 
   FS_COLLECTION_USERS : "Users",
-  moneyTransferToLabel:"Transfer To:",
+  FS_COLLECTION_USER_CONVERSATION : "UserConversation",
+  FS_COLLECTION_CONVERSATION : "Conversations",
+  FS_COLLECTION_TOPICS : "Topics",
+  FS_COLLECTION_MESSAGES : "Messages",
+
+
   alertLogout:'Are you sure you want to Logout?',
 
-  keyABC:"ABC",
-  keyBack:"Back",
+  msgNoContactsAvailable:'No contacts available',
+  msgNoChatFound:'No chats found',
+  msgSomethingWentWrong:'Something went wrong. Please try later',
 
   dialogButtonOK:"OK",
   dialogButtonCancel:"CANCEL",

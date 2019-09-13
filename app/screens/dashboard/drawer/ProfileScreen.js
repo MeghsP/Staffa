@@ -6,7 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Strings from '../../../utils/res/Strings';
 
 const PROFILE_OPTIONS = [
-  {name:"Basic Settings", screen:Strings.APP_SCREEN_PROFILE},
+  {name:"Basic Settings", screen:Strings.APP_SCREEN_BASIC_INFO},
   {name:"Address or Bank ", screen:Strings.APP_SCREEN_ADD_ADDRESS},
   {name:"Terms & Condition", screen:Strings.APP_SCREEN_TNC},
   {name:"Employee Contract", screen:Strings.APP_SCREEN_EMP_CONTRACT},

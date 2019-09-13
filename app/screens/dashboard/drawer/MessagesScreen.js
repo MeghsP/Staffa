@@ -1,7 +1,10 @@
 import React, {Component} from 'react';
-import {Text, View,FlatList, TouchableWithoutFeedback} from 'react-native';
+import {Text, View} from 'react-native';
 import Header from '../../../utils/header';
 import {AppConsumer} from '../../../context/AppProvider';
+import {PagerTitleIndicator,IndicatorViewPager} from 'rn-viewpager';
+import ChatsView from './messageComponents/ChatsView';
+import ContactsView from './messageComponents/ContactsView';
 
 export default class MessagesScreen extends Component {
  constructor(args) {
@@ -15,9 +18,19 @@ export default class MessagesScreen extends Component {
   this.context.goBack(this);
  }
 
- onOptionClick(item){
-  console.log("onOptionClick item : " + JSON.stringify(item));
-  this.context.moveToScreen(this, item.screen);
+_renderTitleIndicator (context) {
+  return (
+      <PagerTitleIndicator
+          style={context.utilities.styles.TabIndicatorStyle}
+          trackScroll={true}
+          itemTextStyle={context.utilities.styles.TabIndicatorTextStyle}
+          itemStyle={{width:context.screenWidth/2}}
+          selectedItemStyle={{width:context.screenWidth/2}}
+          selectedItemTextStyle={context.utilities.styles.TabIndicatorSelectedTextStyle}
+          selectedBorderStyle={context.utilities.styles.TabIndicatorSelectedBorderStyle}
+          titles={context.utilities.strings.MESSAGES_TAB}
+      />
+  )
 }
 
  render() {
@@ -32,8 +45,14 @@ export default class MessagesScreen extends Component {
     <AppConsumer>
     {(context) => (
       <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
-          <Header title="Profile" {...platformHeaderProps} />
-          
+          <Header title="Messages" {...platformHeaderProps} />
+          <IndicatorViewPager
+                    style={context.utilities.styles.TabIndicatorViewPagerStyle}
+                    indicator={this._renderTitleIndicator(context)}
+                >
+            <ChatsView screen = {this}/>
+            <ContactsView screen = {this}/>
+          </IndicatorViewPager>
       </View>
      )}
      </AppConsumer> 

@@ -53,8 +53,9 @@ export default class AddAddressScreen extends Component {
       sortCode:this.state.sortCode
   }};
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, data); 
+  this.context.updateUserData();
   if(this.state.isDataAvailable){
-    this.context.userData.addressData = data.addressData;
+    // this.context.userData.addressData = data.addressData;
     this.context.goBack(this);
   } else {
     this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_TNC);

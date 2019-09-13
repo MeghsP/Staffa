@@ -25,8 +25,9 @@ export default class NotificationsScreen extends Component {
       isNotificationON:this.state.isNotificationON,
   }};
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data); 
+  this.context.updateUserData();
   if(this.state.isDataAvailable){
-    this.context.userData.notificationSettings = data.notificationSettings;
+    // this.context.userData.notificationSettings = data.notificationSettings;
     this.context.goBack(this);
   } else {
     this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_BEGIN_VERIFICATION);

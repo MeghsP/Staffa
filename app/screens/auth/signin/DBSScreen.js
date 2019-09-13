@@ -29,13 +29,15 @@ export default class DBSScreen extends Component {
 
 
  onScanClick(){
-  
+  this.context.openCamera((image) => {
+    this.setState({avatarSource:image});
+  });
  }
 
  onUploadClick(){
-  this.context.showImagePickerAlert((image) => {
+  this.context.openGallery((image) => {
     this.setState({avatarSource:image});
-   });
+  });
  }
 
  onNextClick(){
@@ -49,6 +51,7 @@ export default class DBSScreen extends Component {
           isDocAvailable:false
       }};
       this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, data);
+      this.context.updateUserData();
       this.moveToNextScreen(data);
   } else {
     if(this.state.avatarSource === ""){
@@ -68,6 +71,7 @@ export default class DBSScreen extends Component {
         }};
         this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, data);
         this.context.showLoading(false);
+        this.context.updateUserData();
         this.moveToNextScreen(data);
       } else {
         this.context.showToast("File not uploaded");

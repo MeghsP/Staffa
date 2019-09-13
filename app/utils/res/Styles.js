@@ -69,6 +69,13 @@ module.exports = StyleSheet.create({
     marginRight:10
   },
 
+  InputTextEnableLeftStyle: {
+    flex:1,
+    fontSize:15,
+    color: Colors.black,
+    marginRight:10
+  },
+
   ForgotPasswordLinkTextStyle: {
     fontSize:13, 
     alignSelf: 'flex-end', 
@@ -248,7 +255,94 @@ module.exports = StyleSheet.create({
     height:30,
   },
 
+  TabIndicatorViewPagerStyle:{
+    flex: 1, 
+    flexDirection: 'column-reverse'
+  },
 
+  TabIndicatorStyle:{
+    backgroundColor: Colors.lightGray,
+    height: 48
+  },
+
+  TabIndicatorTextStyle:{
+    fontSize: 14,
+    color: Colors.headerBGColor
+  },
+
+  TabIndicatorSelectedTextStyle:{
+    fontSize: 14,
+    color: Colors.headerBGColor,
+    fontWeight:'bold'
+  },
+
+  TabIndicatorSelectedBorderStyle:{
+    height: 3,
+    backgroundColor: Colors.headerBGColor
+  },
+
+  ContactsRowStyle:{
+    flex:1, 
+    flexDirection:'row',
+    padding:10, 
+    alignItems:'center', 
+    borderBottomColor:Colors.lightGray, 
+    borderBottomWidth:1
+  },
+
+  ContactsProfileImageStyle:{
+    width:45,
+    height:45,
+    borderRadius:100,
+    borderColor:Colors.black,
+    borderWidth:0.5
+  },
+
+  ContactsUserNameTextStyle:{
+    color:Colors.black,
+    fontSize:14,
+    marginLeft:10,
+    marginRight:10
+  },
+
+  NoDataTextStyle:{
+    color:Colors.mediumGray,
+    fontSize:14,
+    marginLeft:20,
+    marginRight:20
+  },
+
+  CenterDataViewStyle:{
+    flex:1,
+    height:windowHeight,
+    justifyContent:'center',
+    alignItems:'center'
+  },
+
+  ChatHeaderViewStyle:{
+    height:55, 
+    flexDirection:'row',
+    alignItems:'center',
+    backgroundColor:Colors.headerBGColor
+  },
+
+  ChatProfileImageStyle:{
+    width:43,
+    height:43,
+    borderRadius:100,
+    borderColor:Colors.white,
+    borderWidth:0.5,
+    marginLeft:0
+  },
+
+  ChatReceiverNameTextStyle:{
+    color:Colors.white,
+    fontWeight:'bold',
+    fontSize:15,
+    flex:1,
+    marginLeft:10,
+    marginRight:10
+  },
   container: { width:windowWidth,flex: 1,backgroundColor: Colors.appBGColor},
 
   /**
@@ -296,7 +390,7 @@ module.exports = StyleSheet.create({
   },
 
   Alert_TextStyle:{
-      color:Colors.appColor,
+      color:Colors.headerBGColor,
       textAlign:'center',
       fontSize: 15
   }

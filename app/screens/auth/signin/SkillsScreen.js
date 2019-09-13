@@ -41,8 +41,9 @@ export default class SkillsScreen extends Component {
       data:this.state.data
   }};
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data); 
+  this.context.updateUserData();
   if(this.state.isDataAvailable){
-    this.context.userData.skills = data.skills;
+    // this.context.userData.skills = data.skills;
     this.context.goBack(this);
   } else {
     this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_BIO); 

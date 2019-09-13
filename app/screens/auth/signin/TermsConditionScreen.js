@@ -27,8 +27,9 @@ export default class TermsConditionScreen extends Component {
   }
   var data = {isTermsAccepted:this.state.isTermsAccepted};
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data); 
+  this.context.updateUserData();
   if(this.state.isDataAvailable){
-    this.context.userData.isTermsAccepted = data.isTermsAccepted;
+    // this.context.userData.isTermsAccepted = data.isTermsAccepted;
     this.context.goBack(this);
   } else {
     this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_EMP_CONTRACT);

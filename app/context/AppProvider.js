@@ -36,6 +36,7 @@ export default class AppProvider extends React.Component {
         user:null,
         currentScreen:Strings.APP_SCREEN_LOGIN,
         currentContext:null,
+        currentChatReceiver:null,
 
         okText:'',
         cancelText:'',
@@ -93,6 +94,21 @@ export default class AppProvider extends React.Component {
       });
     }
 
+     /*
+      Update current user's data
+    */
+   updateUserData = () => {
+    setTimeout(()=>{
+      console.log("updateUserData : "  + this.state.user.uid);
+      apiService.getUserData(this.state.user.uid,(error, response) => {
+        if(response){
+          this.setUserData(response);
+          console.log("getUserData 2 : "  + JSON.stringify(response));
+        }
+      });
+    }, 500);
+  }
+
     /*
       Set current screen to jump to
     */
@@ -135,6 +151,15 @@ export default class AppProvider extends React.Component {
       context.props.navigation.navigate(screen);
     }
 
+    /*
+      Method will be called to jump to other screen
+      @context - Context of the component calling method
+      @screen - Screen name to jump to
+    */
+    moveToScreenPayload = (context, screen, data) => {
+      context.props.navigation.navigate(screen, data);
+    }
+
 
     goBack = (context) => {
       context.props.navigation.goBack();
@@ -152,6 +177,10 @@ export default class AppProvider extends React.Component {
     */
     showLoading = (value) =>{
       this.setState({showLoading: value});
+    }
+
+    setChatReceiver = (user) =>{
+      this.setState({currentChatReceiver: user});
     }
 
     /*
@@ -186,12 +215,13 @@ export default class AppProvider extends React.Component {
     onOptionSelected(option){
       this.hidePickerAlert();
       if (option == 0) {
-        this.onCameraClick();
+        this.openCamera(this.imagePickerCallBack);
       } else {
-        this.onGalleryClick();
+        this.openGallery(this.imagePickerCallBack);
       }
     }
-    onCameraClick(){
+    openCamera = (callBack) => {
+      this.imagePickerCallBack = callBack;
       ImagePicker.openCamera({
         width: 500,
         height: 500,
@@ -205,7 +235,8 @@ export default class AppProvider extends React.Component {
       });
     }
     
-    onGalleryClick(){
+    openGallery = (callBack) => {
+      this.imagePickerCallBack = callBack;
       ImagePicker.openPicker({
         width: 500,
         height: 500,
@@ -269,11 +300,13 @@ export default class AppProvider extends React.Component {
           checkUserAuthentication:this.checkUserAuthentication,
           setCurrentScreen:this.setCurrentScreen,
           setUserData:this.setUserData,
+          updateUserData:this.updateUserData,
           currentUser:this.state.user,
           userData: this.state.userData,
           currentScreen:this.state.currentScreen,
           replaceScreen: this.replaceScreen,
           moveToScreen: this.moveToScreen,
+          moveToScreenPayload:this.moveToScreenPayload,
           goBack:this.goBack,
           setCurrentContext:this.setCurrentContext,
           showToast:this.showToast,
@@ -283,6 +316,10 @@ export default class AppProvider extends React.Component {
           toggleDrawer:this.toggleDrawer,
           showDialog:this.showDialog,
           clearAllData:this.clearAllData,
+          currentChatReceiver:this.state.currentChatReceiver,
+          setChatReceiver:this.setChatReceiver,
+          openCamera:this.openCamera,
+          openGallery:this.openGallery
         }}>
         {this.props.children}
         

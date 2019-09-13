@@ -114,6 +114,131 @@ export default class ApiService {
    userDoc.update(data);
   }
 
+  getChatUID(uid1, uid2){
+    if(uid1 < uid2){
+      return uid1 + uid2;  
+    } else {
+      return uid2 + uid1;
+    }
+   }
+
+   isConversationExist(chatUID, callBack){
+    var chatRef = firebase.firestore().collection(Strings.FS_COLLECTION_CONVERSATION).doc(chatUID);
+    chatRef.get().then(doc => {
+        if (doc.exists) {
+          // this.getTopics(chatRef,doc.data(), callBack);
+          var data = doc.data();
+          callBack(false, {exist:true, data:{currentTopic:data.currentTopic}});
+          console.log("ApiService isConversationExist data : " + JSON.stringify(data)); 
+        } else {
+          callBack(false, {exist:false, data:null});
+        }
+    }).catch(err => {
+       callBack(true, null);
+    });
+   }
+
+  //  getTopics(chatRef,data, callBack){
+  //   var topics = [];
+  //   var selectedTopic = {};
+  //   var topicsRef = chatRef.collection(Strings.FS_COLLECTION_TOPICS);
+  //   topicsRef.get().then(snapshot => {
+  //     snapshot.docs.map((doc) => {
+  //       console.log("ApiService getTopics id : " + doc.id); 
+  //       var singleTopic = doc.data();
+  //       var topicName =  doc.id;
+  //       var topic = {topicName:topicName, topicData:singleTopic};
+  //       topics.push(topic);
+  //       if(topicName === data.currentTopic){
+  //         selectedTopic = topic;
+  //       }
+  //     });
+  //     callBack(false, {exist:true, data:{currentTopic:data.currentTopic, topics:topics, selectedTopic:selectedTopic}});
+  //   }).catch(err => {
+  //      callBack(true, null);
+  //   });
+  //  }
+
+   getUserData(userID, callBack){
+    var users = firebase.firestore().collection(Strings.FS_COLLECTION_USERS);
+    var userDoc =  users.doc(userID);  
+    userDoc.get().then(doc => {
+      callBack(false, doc.data());
+    }).catch(err => {
+       callBack(true, null);
+    });
+   }
+
+
+
+
+  setNewConversation(userID, receiverID, chatUID){
+    // Entry to Sender Conversation collection
+    var chatDoc = this.getUserConversationNode(userID, chatUID);
+    var data = {
+        topics:[],
+        senderID:receiverID
+    };
+    chatDoc.set(data);
+
+    // Entry to Receiver Conversation collection
+    chatDoc = this.getUserConversationNode(receiverID, chatUID);
+    data = {
+        topics:[],
+        senderID:userID
+    };
+    chatDoc.set(data);
+
+    // Entry to Conversation collection
+    var chatUIDDoc = this.getConversationNode(chatUID);  
+    chatUIDDoc.set({currentTopic:""});
+  }
+
+  addNewTopicNode(topicName, chatUID) {
+    var chatUIDDoc = this.getConversationNode(chatUID); 
+    chatUIDDoc.set({currentTopic:topicName});
+    var conversation = chatUIDDoc.collection(Strings.FS_COLLECTION_TOPICS); 
+    var topicDoc = conversation.doc(topicName); 
+    var data = {
+          unseenCount:0,
+          lastMessageID:0,
+    };
+    topicDoc.set(data);
+  }
+
+  updateCurrentTopic(topicName, chatUID) {
+    var chatUIDDoc = this.getConversationNode(chatUID); 
+    chatUIDDoc.update({currentTopic:topicName});
+  }
+
+
+
+  getUserConversationNode(userID, chatUID) {
+    var users = firebase.firestore().collection(Strings.FS_COLLECTION_USER_CONVERSATION);
+    var userDoc =  users.doc(userID);  
+    userDoc.set({set:true});
+    var conversation = userDoc.collection(Strings.FS_COLLECTION_CONVERSATION); 
+    return conversation.doc(chatUID);  
+  }
+
+  getConversationNode(chatUID) {
+    var users = firebase.firestore().collection(Strings.FS_COLLECTION_CONVERSATION);
+    return users.doc(chatUID);  
+  }
+
+  isTopicExist(topicName, topics) {
+    topics.map((topic) => {
+      if(topic.topicName.toLowerCase() === topicName.toLowerCase()){
+        return true;
+      } else {
+        return false;
+      }
+    });
+    return false;
+  }
+
+
+
   getScreenName(data) {
     if(data.addressData){
       if(data.isTermsAccepted){
