@@ -13,6 +13,9 @@ export default class HomeScreen extends Component {
 
  componentDidMount(){
    this.context.setCurrentContext(this);
+   if(this.context.openFromNotification){
+    this.context.performNotificationAction(this);
+   }
  }
  
  toggleDrawer = () => {

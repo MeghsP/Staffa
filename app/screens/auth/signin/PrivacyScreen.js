@@ -12,28 +12,18 @@ export default class PrivacyScreen extends Component {
     }
  }
 
- componentDidMount(){
-    if(this.context.userData && this.context.userData.isPrivacyAccepted){
-    var empData = this.context.userData.isPrivacyAccepted;
-    this.setState({isPrivacyAccepted:empData});
-    this.setState({isDataAvailable:true});
-    }
- }
-
  onAgreeClick(){
   if(this.state.isPrivacyAccepted === false){
     this.context.showToast("Please accept Privacy &amp; GDPR");
      return;
   }
+  this.context.showLoading(true);
   var data = {isPrivacyAccepted:this.state.isPrivacyAccepted};
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data); 
-  this.context.updateUserData();
-  if(this.state.isDataAvailable){
-    // this.context.userData.isPrivacyAccepted = data.isPrivacyAccepted;
-    this.context.goBack(this);
-  } else {
-    this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_INFO_SHARING);
-  }
+  this.context.updateUserData((user) => {
+    this.context.showLoading(false);
+    this.context.replaceScreen(this, this.context.currentScreen);
+  });
  }
 
  render() {
@@ -42,11 +32,6 @@ export default class PrivacyScreen extends Component {
     {(context) => (
      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
         <View style={{marginTop:10, flexDirection:'row'}}>
-         {this.state.isDataAvailable && 
-            <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
-              <Image source={require('../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
-            </TouchableOpacity>
-          }
           <View style={{alignItems:'center', flex:1}} >
             <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
             <Text style = {context.utilities.styles.headerInfoTextStyle}>Privacy &amp; GDPR</Text>
@@ -67,7 +52,7 @@ export default class PrivacyScreen extends Component {
           />
           
             <TouchableOpacity style = {{width:context.screenWidth,marginBottom:30}} onPress={ () => this.onAgreeClick()}>
-              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {margin:5}]}>{this.state.isDataAvailable ? 'UPDATE' :  "NEXT"}</Text>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {margin:5}]}>NEXT</Text>
             </TouchableOpacity>
 
         </View>

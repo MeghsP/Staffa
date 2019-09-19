@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text,Picker, View,TextInput,ScrollView,TouchableOpacity} from 'react-native';
+import {Text,Picker,Image, View,TextInput,ScrollView,TouchableOpacity} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import moment from 'moment';
 
@@ -140,12 +140,17 @@ export default class SignUpScreen extends Component {
     <AppConsumer>
     {(context) => (
      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
-        <View style={{alignItems:'center', marginTop:10, width:context.screenWidth}}>
-            <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
-            <Text style = {context.utilities.styles.headerInfoTextStyle}>New Account</Text>
+        <View style={{marginTop:10, flexDirection:'row'}}>
+            <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
+              <Image source={require('../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
+            </TouchableOpacity>
+            <View style={{alignItems:'center', flex:1}} >
+              <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
+              <Text style = {context.utilities.styles.headerInfoTextStyle}>New Account</Text>
+            </View>
         </View>
         <View style = {context.utilities.styles.baseStyle1}>
-          <ScrollView>
+          <ScrollView style = {{width:context.screenWidth}}>
             <View style = {{width:context.screenWidth}}>
                     <View style = {context.utilities.styles.InputTextBoxStyle}>
                         <TextInput

@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Text,Picker, View, Image,TouchableOpacity} from 'react-native';
-import {AppConsumer} from '../../../context/AppProvider'; 
+import {AppConsumer} from '../../../../context/AppProvider'; 
 
-export default class VerificationScreen extends Component {
+export default class UpdateVerificationScreen extends Component {
  constructor(args) {
    super(args);
    this.state = {
@@ -12,13 +12,18 @@ export default class VerificationScreen extends Component {
     }
  }
 
- onNextClick(){
-
-  if(this.state.avatarSource === ""){
-    this.context.showToast("Please select document");
-     return;
+ componentDidMount(){
+  if(this.context.userData && this.context.userData.docVerification){
+     this.setState(this.context.userData.docVerification);
   }
-  this.uploadImage();
+}
+
+ onNextClick(){
+  if(this.state.avatarSource === ""){
+    this.updateData(this.state.docURL);
+  } else {
+    this.uploadImage();
+  }
  }
 
  uploadImage(){
@@ -43,10 +48,9 @@ export default class VerificationScreen extends Component {
       docURL:url
   }};
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, data);
-  this.context.showLoading(false);
   this.context.updateUserData((user) => {
     this.context.showLoading(false);
-    this.context.replaceScreen(this, this.context.currentScreen);
+    this.context.goBack(this);
   });
  }
 
@@ -62,6 +66,9 @@ export default class VerificationScreen extends Component {
     {(context) => (
      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
         <View style={{marginTop:10, flexDirection:'row'}}>
+            <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
+              <Image source={require('../../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
+            </TouchableOpacity>
           <View style={{alignItems:'center', flex:1}} >
             <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
             <Text style = {context.utilities.styles.headerInfoTextStyle}>Verification</Text>
@@ -91,7 +98,7 @@ export default class VerificationScreen extends Component {
               <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:30, marginBottom:30}]}>{this.state.avatarSource === "" ? 'Upload Document' : 'Scan Document'}</Text>
             </TouchableOpacity>
             <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onNextClick()}>
-              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>NEXT</Text>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>UPDATE</Text>
             </TouchableOpacity>
 
         </View>

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Text,View,TextInput,Image,ScrollView,TouchableOpacity} from 'react-native';
-import {AppConsumer} from '../../../context/AppProvider'; 
+import {AppConsumer} from '../../../../context/AppProvider'; 
 
 export default class QualificationScreen extends Component {
  constructor(args) {
@@ -12,6 +12,12 @@ export default class QualificationScreen extends Component {
       selectedIndex:'',
     }
  }
+
+ componentDidMount(){
+  if(this.context.userData && this.context.userData.qualification){
+   this.setState(this.context.userData.qualification);
+  }
+ } 
 
  updateTotalData(image){
   var data = this.state.selectedData;
@@ -39,7 +45,6 @@ export default class QualificationScreen extends Component {
  }
 
  updateFirestoreData(allData){
-  this.context.showLoading = true;
   setTimeout(()=>{
     var myData = {
       qualification: {
@@ -47,10 +52,9 @@ export default class QualificationScreen extends Component {
       }
     };
     this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, myData);
-    this.context.showLoading(false);
     this.context.updateUserData((user) => {
       this.context.showLoading(false);
-      this.context.replaceScreen(this, this.context.currentScreen);
+      this.context.goBack(this);
     });
   }, 3000);
  }
@@ -130,6 +134,9 @@ export default class QualificationScreen extends Component {
     {(context) => (
      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
         <View style={{marginTop:10, flexDirection:'row'}}>
+            <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
+              <Image source={require('../../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
+            </TouchableOpacity>
           <View style={{alignItems:'center', flex:1}} >
             <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
             <Text style = {context.utilities.styles.headerInfoTextStyle}>Qualifications</Text>
@@ -143,8 +150,8 @@ export default class QualificationScreen extends Component {
                 return (
                   <View style={{alignItems:'center',justifyContent:'center'}}>
                     <View style={{margin:10, height:150, width:150, borderColor:context.utilities.colors.black,borderWidth:1, borderRadius:1}}>
-                        {(data.doc !== "") &&
-                          <Image style={{width:148, height: 148}} source={{uri:data.doc}} />
+                        {(data.docURL !== "" || data.doc !== "") &&
+                          <Image style={{width:148, height: 148}} source={{uri:data.doc.length > 0 ?  data.doc : data.docURL}} />
                         }
                     </View>
                     <View style = {[context.utilities.styles.InputTextBoxStyle, {marginTop:0}]}>
@@ -181,7 +188,7 @@ export default class QualificationScreen extends Component {
               <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:30}]}>ADD QUALIFICATION</Text>
             </TouchableOpacity>
             <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onNextClick()}>
-              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>NEXT</Text>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>UPDATE</Text>
             </TouchableOpacity>
      </View>
      )} 

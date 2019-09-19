@@ -1,10 +1,10 @@
-
 /*
   Defines styles for each UI Component
 */
 'use strict';
 import {StyleSheet,Dimensions} from 'react-native';
 import Colors from './Colors';
+import Strings from './Strings';
 
 var windowHeight = Dimensions.get('window').height;
 var windowWidth = Dimensions.get('window').width;
@@ -18,13 +18,13 @@ module.exports = StyleSheet.create({
 
   splashLogoTextStyle: {
     fontSize:30,
-    fontFamily:'QMA', 
+    fontFamily:Strings.FONT_QMA, 
     color:Colors.black
   },
 
   headerLogoTextStyle: {
     fontSize:17,
-    fontFamily:'QMA', 
+    fontFamily:Strings.FONT_QMA, 
     color:Colors.black
   },
 

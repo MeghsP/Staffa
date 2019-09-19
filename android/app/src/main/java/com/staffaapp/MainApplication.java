@@ -18,7 +18,9 @@ import io.github.traviskn.rnuuidgenerator.RNUUIDGeneratorPackage;
 import io.invertase.firebase.RNFirebasePackage;
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
+import io.invertase.firebase.functions.RNFirebaseFunctionsPackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import io.invertase.firebase.storage.RNFirebaseStoragePackage;
 
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
@@ -47,6 +49,8 @@ public class MainApplication extends Application implements ReactApplication {
       packages.add(new RNFirebaseFirestorePackage());
       packages.add(new RNFirebaseStoragePackage());
       packages.add(new RNFirebaseMessagingPackage());
+      packages.add(new RNFirebaseFunctionsPackage());
+      packages.add(new RNFirebaseNotificationsPackage());
 
       // Packages that cannot be autolinked yet can be added manually here, for example:
       // packages.add(new MyReactNativePackage());

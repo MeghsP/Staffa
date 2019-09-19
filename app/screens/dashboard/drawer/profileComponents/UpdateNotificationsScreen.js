@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Text,View,Image,ScrollView,TouchableOpacity} from 'react-native';
 import {CheckBox} from 'react-native-elements';
-import {AppConsumer} from '../../../context/AppProvider'; 
+import {AppConsumer} from '../../../../context/AppProvider'; 
 
 export default class NotificationsScreen extends Component {
  constructor(args) {
@@ -11,8 +11,14 @@ export default class NotificationsScreen extends Component {
     }
  }
 
+ componentDidMount(){
+  if(this.context.userData && this.context.userData.notificationSettings){
+   this.setState(this.context.userData.notificationSettings);
+  }
+}
+
  onAgreeClick(){
-  this.context.showLoading(true);
+  this.context.showLoading(false);
   var data =  {
     notificationSettings:{
       isNotificationON:this.state.isNotificationON,
@@ -20,7 +26,7 @@ export default class NotificationsScreen extends Component {
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data); 
   this.context.updateUserData((user) => {
     this.context.showLoading(false);
-    this.context.replaceScreen(this, this.context.currentScreen);
+    this.context.goBack(this);
   });
  }
 
@@ -30,6 +36,9 @@ export default class NotificationsScreen extends Component {
     {(context) => (
      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}> 
         <View style={{marginTop:10, flexDirection:'row'}}>
+            <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
+              <Image source={require('../../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
+            </TouchableOpacity>
           <View style={{alignItems:'center', flex:1}} >
             <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
             <Text style = {context.utilities.styles.headerInfoTextStyle}>Notifications</Text>
@@ -52,7 +61,7 @@ export default class NotificationsScreen extends Component {
           />
           
             <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onAgreeClick()}>
-              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:30, marginBottom:30}]}>NEXT</Text>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:30, marginBottom:30}]}>UPDATE</Text>
             </TouchableOpacity>
 
         </View>

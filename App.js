@@ -22,9 +22,23 @@ import CertificateScreen from './app/screens/auth/signin/CertificateScreen';
 import ReferencesScreen from './app/screens/auth/signin/ReferencesScreen';
 import SkillsScreen from './app/screens/auth/signin/SkillsScreen';
 import BioScreen from './app/screens/auth/signin/BioScreen';
-import BasicInfoScreen from './app/screens/auth/signin/BasicInfoScreen';
 import SuccessScreen from './app/screens/auth/signin/SuccessScreen';
 import VerifyMobileNumberScreen from './app/screens/auth/signin/VerifyMobileNumberScreen';
+
+import UpdateAddressScreen from './app/screens/dashboard/drawer/profileComponents/UpdateAddressScreen';
+import UpdateBasicInfoScreen from './app/screens/dashboard/drawer/profileComponents/UpdateBasicInfoScreen';
+import UpdateBioScreen from './app/screens/dashboard/drawer/profileComponents/UpdateBioScreen';
+import UpdateCertificateScreen from './app/screens/dashboard/drawer/profileComponents/UpdateCertificateScreen';
+import UpdateDBSScreen from './app/screens/dashboard/drawer/profileComponents/UpdateDBSScreen';
+import UpdateEmploymentContractScreen from './app/screens/dashboard/drawer/profileComponents/UpdateEmploymentContractScreen';
+import UpdateInfoSharingScreen from './app/screens/dashboard/drawer/profileComponents/UpdateInfoSharingScreen';
+import UpdateNotificationsScreen from './app/screens/dashboard/drawer/profileComponents/UpdateNotificationsScreen';
+import UpdatePrivacyScreen from './app/screens/dashboard/drawer/profileComponents/UpdatePrivacyScreen';
+import UpdateQualificationScreen from './app/screens/dashboard/drawer/profileComponents/UpdateQualificationScreen';
+import UpdateReferencesScreen from './app/screens/dashboard/drawer/profileComponents/UpdateReferencesScreen';
+import UpdateSkillsScreen from './app/screens/dashboard/drawer/profileComponents/UpdateSkillsScreen';
+import UpdateTermsConditionScreen from './app/screens/dashboard/drawer/profileComponents/UpdateTermsConditionScreen';
+import UpdateVerificationScreen from './app/screens/dashboard/drawer/profileComponents/UpdateVerificationScreen';
 
 import HomeScreen from './app/screens/dashboard/HomeScreen';
 import ProfileScreen from './app/screens/dashboard/drawer/ProfileScreen';
@@ -53,7 +67,21 @@ let RootStack = createStackNavigator({
       BioScreen:{screen:BioScreen},
       SuccessScreen:{screen:SuccessScreen},
       VerifyMobileNumberScreen:{screen:VerifyMobileNumberScreen},
-      BasicInfoScreen:{screen:BasicInfoScreen},
+
+      UpdateAddressScreen:{screen:UpdateAddressScreen},
+      UpdateBasicInfoScreen:{screen:UpdateBasicInfoScreen},
+      UpdateBioScreen:{screen:UpdateBioScreen},
+      UpdateCertificateScreen:{screen:UpdateCertificateScreen},
+      UpdateDBSScreen:{screen:UpdateDBSScreen},
+      UpdateEmploymentContractScreen:{screen:UpdateEmploymentContractScreen},
+      UpdateInfoSharingScreen:{screen:UpdateInfoSharingScreen},
+      UpdateNotificationsScreen:{screen:UpdateNotificationsScreen},
+      UpdatePrivacyScreen:{screen:UpdatePrivacyScreen},
+      UpdateQualificationScreen:{screen:UpdateQualificationScreen},
+      UpdateReferencesScreen:{screen:UpdateReferencesScreen},
+      UpdateSkillsScreen:{screen:UpdateSkillsScreen},
+      UpdateTermsConditionScreen:{screen:UpdateTermsConditionScreen},
+      UpdateVerificationScreen:{screen:UpdateVerificationScreen},
 
       HomeScreen:{screen:HomeScreen},
       ProfileScreen:{screen:ProfileScreen},

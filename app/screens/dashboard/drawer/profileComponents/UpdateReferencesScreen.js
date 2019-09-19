@@ -1,19 +1,18 @@
 import React, {Component} from 'react';
-import {Text,View,TextInput,Image,ScrollView,TouchableOpacity} from 'react-native';
-import {AppConsumer} from '../../../context/AppProvider'; 
+import {Text, View,TextInput,Image,ScrollView,TouchableOpacity} from 'react-native';
+import {AppConsumer} from '../../../../context/AppProvider'; 
 
-export default class QualificationScreen extends Component {
+export default class ReferencesScreen extends Component {
  constructor(args) {
    super(args);
    this.state = {
       data:[{id:1, name:'',doc:'',docURL:''}],
-      name:'',
       selectedData:'',
       selectedIndex:'',
     }
  }
 
- updateTotalData(image){
+updateTotalData(image){
   var data = this.state.selectedData;
   data.doc = image;
   var allData = this.state.data;
@@ -22,13 +21,11 @@ export default class QualificationScreen extends Component {
   console.log('updateTotalData array : ' + JSON.stringify(this.state.data));
 }
 
- onUploadClick(data, index){
-  this.setState({selectedData:data});
-  this.setState({selectedIndex:index});
-  this.context.openGallery((image) => {
-    this.updateTotalData(image);
-  });
- }
+componentDidMount(){
+  if(this.context.userData && this.context.userData.references){
+   this.setState(this.context.userData.references);
+  }
+ } 
 
  onScanClick(data, index){
   this.setState({selectedData:data});
@@ -38,19 +35,25 @@ export default class QualificationScreen extends Component {
   });
  }
 
+ onUploadClick(data, index){
+  this.setState({selectedData:data});
+  this.setState({selectedIndex:index});
+  this.context.openGallery((image) => {
+    this.updateTotalData(image);
+  });
+ }
+
  updateFirestoreData(allData){
-  this.context.showLoading = true;
   setTimeout(()=>{
     var myData = {
-      qualification: {
+      references: {
         data: allData
       }
     };
     this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, myData);
-    this.context.showLoading(false);
     this.context.updateUserData((user) => {
       this.context.showLoading(false);
-      this.context.replaceScreen(this, this.context.currentScreen);
+      this.context.goBack(this);
     });
   }, 3000);
  }
@@ -68,15 +71,14 @@ export default class QualificationScreen extends Component {
     return;
   }
   allData[this.state.data.length - 1] = previousEntry;
-  console.log('onNextClick joined : ' + JSON.stringify(allData));
+  console.log('onAddClick joined : ' + JSON.stringify(allData));
   this.setState({ data: allData });
 
   this.context.showLoading(true);
   var allData =  this.state.data;
-
   allData.map((data,index) => {
     if(data.doc.length > 0){
-      var filePath = this.context.currentUser.uid +"/"+this.context.utilities.strings.FS_FILE_DIR_QUALIfICATION;
+      var filePath = this.context.currentUser.uid +"/"+this.context.utilities.strings.FS_FILE_DIR_REFERENCES;
       this.context.apiService.uploadImage(filePath,data.doc,(error, response) => {
         console.log("onNextClick uploadImage response : " + response);
         console.log("onNextClick uploadImage error : " + error);
@@ -117,12 +119,12 @@ export default class QualificationScreen extends Component {
  }
 
  updateTextChange(index, text) {
-   var currentData = this.state.data[index];
-   currentData.name = text;
-   var allData = this.state.data;
-   allData[index] = currentData;
-   this.setState({ data: allData });
- }
+  var currentData = this.state.data[index];
+  currentData.name = text;
+  var allData = this.state.data;
+  allData[index] = currentData;
+  this.setState({ data: allData });
+}
 
  render() {
    return (
@@ -130,30 +132,32 @@ export default class QualificationScreen extends Component {
     {(context) => (
      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
         <View style={{marginTop:10, flexDirection:'row'}}>
+            <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
+              <Image source={require('../../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
+            </TouchableOpacity>
           <View style={{alignItems:'center', flex:1}} >
             <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
-            <Text style = {context.utilities.styles.headerInfoTextStyle}>Qualifications</Text>
+            <Text style = {context.utilities.styles.headerInfoTextStyle}>References</Text>
           </View>
         </View>
         <View style = {context.utilities.styles.baseStyle1}>
-            <Text style = {[context.utilities.styles.NewToAppTextStyle,{marginTop:10}]}>Upload your qualifications for Employers to view</Text>
+            <Text style = {[context.utilities.styles.NewToAppTextStyle,{marginTop:10}]}>Upload your references</Text>
             <ScrollView>
             {
               this.state.data.map((data,index) => {
                 return (
                   <View style={{alignItems:'center',justifyContent:'center'}}>
-                    <View style={{margin:10, height:150, width:150, borderColor:context.utilities.colors.black,borderWidth:1, borderRadius:1}}>
-                        {(data.doc !== "") &&
-                          <Image style={{width:148, height: 148}} source={{uri:data.doc}} />
+                    <View style={{marginTop:10, height:150, width:150, borderColor:context.utilities.colors.black,borderWidth:1, borderRadius:1}}>
+                        {(data.docURL !== "" || data.doc !== "") &&
+                          <Image style={{width:148, height: 148}} source={{uri:data.doc.length > 0 ?  data.doc : data.docURL}} />
                         }
                     </View>
                     <View style = {[context.utilities.styles.InputTextBoxStyle, {marginTop:0}]}>
                       <TextInput
                           style = {data.name === '' ? context.utilities.styles.InputTextDisableStyle : context.utilities.styles.InputTextEnableStyle}
-                          placeholder = "Name of Qualification"
-                          // onChangeText = {(text) => {this.setState({name:text})}}
+                          placeholder = "Name of Reference"
                           onChangeText = {(text) => {
-                              this.updateTextChange(index, text);
+                            this.updateTextChange(index, text);
                           }}
                           returnKeyType= { "done" }
                           underlineColorAndroid='transparent'
@@ -178,10 +182,10 @@ export default class QualificationScreen extends Component {
             </ScrollView>
         </View>
             <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onAddClick()}>
-              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:30}]}>ADD QUALIFICATION</Text>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:30}]}>ADD REFERENCE</Text>
             </TouchableOpacity>
             <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onNextClick()}>
-              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>NEXT</Text>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>UPDATE</Text>
             </TouchableOpacity>
      </View>
      )} 

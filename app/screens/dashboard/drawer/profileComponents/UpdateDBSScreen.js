@@ -1,19 +1,30 @@
 import React, {Component} from 'react';
 import {Text,Image, View,TouchableOpacity} from 'react-native';
 import {CheckBox} from 'react-native-elements';
-import {AppConsumer} from '../../../context/AppProvider'; 
+import {AppConsumer} from '../../../../context/AppProvider'; 
 
 export default class DBSScreen extends Component {
  constructor(args) {
    super(args);
    this.state = {
-      // docType:Strings.DOC_TYPE[0].name,
       avatarSource:'',
       isDocAvailable:false,
       checked2:false,
       
     }
  }
+
+ componentDidMount(){
+  if(this.context.userData && this.context.userData.dbsDocument){
+   var data = this.context.userData.dbsDocument;
+   if(data.isDocAvailable){
+    this.setState({isDocAvailable:true});
+   } else {
+    this.setState({checked2:true});
+   }
+  }
+}
+
 
  onScanClick(){
   this.context.openCamera((image) => {
@@ -68,7 +79,7 @@ export default class DBSScreen extends Component {
  moveToNextScreen(data) {
   this.context.updateUserData((user) => {
     this.context.showLoading(false);
-    this.context.replaceScreen(this, this.context.currentScreen);
+    this.context.goBack(this);
   });
  }
 
@@ -78,6 +89,9 @@ export default class DBSScreen extends Component {
     {(context) => (
      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
         <View style={{marginTop:10, flexDirection:'row'}}>
+          <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
+            <Image source={require('../../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
+          </TouchableOpacity>
           <View style={{alignItems:'center', flex:1}} >
             <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
             <Text style = {context.utilities.styles.headerInfoTextStyle}>DBS</Text>
@@ -123,7 +137,7 @@ export default class DBSScreen extends Component {
             }
 
             <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onNextClick()}>
-              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:70, marginBottom:30}]}>NEXT</Text>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:70, marginBottom:30}]}>UPDATE</Text>
             </TouchableOpacity>
         </View>
         </View>

@@ -9,9 +9,11 @@ export default class SplashScreen extends Component {
  }
  
  componentDidMount(){
-  this.timeoutHandle = setTimeout(()=>{
-    this.context.replaceScreen(this, this.context.currentScreen);
-  }, 3000);
+  this.context.checkUserAuthentication((user) => {
+    this.timeoutHandle = setTimeout(()=>{
+      this.context.replaceScreen(this, this.context.currentScreen);
+    }, 1000);
+  });
  }
 
  componentWillUnmount() {

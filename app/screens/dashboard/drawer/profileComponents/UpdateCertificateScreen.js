@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Text,View,ScrollView,Image, TouchableOpacity} from 'react-native';
 import {CheckBox} from 'react-native-elements';
-import {AppConsumer} from '../../../context/AppProvider'; 
+import {AppConsumer} from '../../../../context/AppProvider'; 
 
 export default class CertificateScreen extends Component {
  constructor(args) {
@@ -23,6 +23,12 @@ export default class CertificateScreen extends Component {
     }
  }
 
+ componentDidMount(){
+  if(this.context.userData && this.context.userData.cartificates){
+   this.setState(this.context.userData.cartificates);
+  }
+ } 
+
  onNextClick(){
   this.context.showLoading(true);
   var data =  {
@@ -32,9 +38,10 @@ export default class CertificateScreen extends Component {
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data); 
   this.context.updateUserData((user) => {
     this.context.showLoading(false);
-    this.context.replaceScreen(this, this.context.currentScreen);
+    this.context.goBack(this);
   });
  }
+
  onCheck(index){
   var joined = this.state.data;
   if(joined[index].checked){
@@ -51,6 +58,9 @@ export default class CertificateScreen extends Component {
     {(context) => (
      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
         <View style={{marginTop:10, flexDirection:'row'}}>
+          <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
+            <Image source={require('../../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
+           </TouchableOpacity>
           <View style={{alignItems:'center', flex:1}} >
             <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
             <Text style = {context.utilities.styles.headerInfoTextStyle}>Your Certificates</Text>
@@ -79,7 +89,7 @@ export default class CertificateScreen extends Component {
         </View>
         <Text style = {[context.utilities.styles.NewToAppTextStyle,{marginTop:20, color:context.utilities.colors.red}]}>Click on the title to upload of scan your certificate</Text>
             <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onNextClick()}>
-              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>NEXT</Text>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>UPDATE</Text>
             </TouchableOpacity>
      </View>
      )} 

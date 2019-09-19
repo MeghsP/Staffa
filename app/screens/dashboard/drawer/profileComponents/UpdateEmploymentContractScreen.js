@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Text, View,ScrollView,Image, TouchableOpacity} from 'react-native';
 import {CheckBox} from 'react-native-elements';
-import {AppConsumer} from '../../../context/AppProvider'; 
+import {AppConsumer} from '../../../../context/AppProvider'; 
 
 export default class EmploymentContractScreen extends Component {
  constructor(args) {
@@ -10,6 +10,12 @@ export default class EmploymentContractScreen extends Component {
     isEmploymentAccepted:false,
     }
  }
+
+ componentDidMount(){
+  if(this.context.userData && this.context.userData.isTermsAccepted){
+   this.setState({isEmploymentAccepted:this.context.userData.isEmploymentAccepted});
+  }
+}
 
   onAgreeClick(){
     if(this.state.isEmploymentAccepted === false){
@@ -21,7 +27,7 @@ export default class EmploymentContractScreen extends Component {
     this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data); 
     this.context.updateUserData((user) => {
       this.context.showLoading(false);
-      this.context.replaceScreen(this, this.context.currentScreen);
+      this.context.goBack(this);
     });
   }
 
@@ -31,6 +37,9 @@ export default class EmploymentContractScreen extends Component {
     {(context) => (
      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
         <View style={{marginTop:10, flexDirection:'row'}}>
+            <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
+              <Image source={require('../../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
+            </TouchableOpacity>
           <View style={{alignItems:'center', flex:1}} >
             <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
             <Text style = {context.utilities.styles.headerInfoTextStyle}>Employment Contract</Text>
@@ -50,7 +59,7 @@ export default class EmploymentContractScreen extends Component {
               onPress={() => this.setState({isEmploymentAccepted: !this.state.isEmploymentAccepted})}
           />
             <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onAgreeClick()}>
-              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {margin:5,marginBottom:30}]}>NEXT</Text>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {margin:5,marginBottom:30}]}>UPDATE</Text>
             </TouchableOpacity>
 
         </View>

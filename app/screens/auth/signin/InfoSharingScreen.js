@@ -15,15 +15,8 @@ export default class InfoSharingScreen extends Component {
     }
  }
 
- componentDidMount(){
-  if(this.context.userData && this.context.userData.infoSharing){
-   var info = this.context.userData.infoSharing;
-   this.setState(info);
-   this.setState({isDataAvailable:true});
-  }
-}
  onAgreeClick(){
-  
+  this.context.showLoading(true);
   var data =  {
     infoSharing:{
       checked1:this.state.checked1,
@@ -32,13 +25,10 @@ export default class InfoSharingScreen extends Component {
       checked4:this.state.checked4
   }};
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data);
-  this.context.updateUserData(); 
-  if(this.state.isDataAvailable){
-    // this.context.userData.infoSharing = data.infoSharing;
-    this.context.goBack(this);
-  } else {
-    this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_NOTIFICATION); 
-  }  
+  this.context.updateUserData((user) => {
+    this.context.showLoading(false);
+    this.context.replaceScreen(this, this.context.currentScreen);
+  });
  }
 
  render() {
@@ -96,7 +86,7 @@ export default class InfoSharingScreen extends Component {
           />
           
             <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onAgreeClick()}>
-              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:30,marginBottom:30}]}>{this.state.isDataAvailable ? 'UPDATE' :  "NEXT"}</Text>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:30,marginBottom:30}]}>NEXT</Text>
             </TouchableOpacity>
 
         </View>

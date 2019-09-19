@@ -18,6 +18,7 @@ export default class ChatScreen extends Component {
      showTopicDialog:false,
      chatUID:'',
      userID:'',
+     receiverID:'',
      message:'',
     }
  }
@@ -32,6 +33,7 @@ export default class ChatScreen extends Component {
     var chatUID = this.context.apiService.getChatUID(receiverID, userID);
     this.setState({userID:userID});
     this.setState({chatUID:chatUID});
+    this.setState({receiverID:receiverID});
     this.context.apiService.isConversationExist(chatUID, (error, response) => {
       console.log("ApiService componentDidMount  error : " + error);
       console.log("ApiService componentDidMount response : " + JSON.stringify(response)); 
@@ -64,16 +66,6 @@ export default class ChatScreen extends Component {
       console.log("listenForCurrentTopic : " + currentTopic);
       screen.setState({currentTopic:currentTopic});
       screen.setState({messages:[]});
-      // if(screen.topics){
-      //   screen.topics.map((topic) => {
-      //     console.log("listenForCurrentTopic topic name: " + topic.topicName);
-      //     if(topic.topicName === currentTopic){
-      //       screen.setState({selectedTopic:topic});
-      //       console.log("listenForCurrentTopic selectedTopic: " + topic.topicName);
-      //     }
-      //   });
-      // }
-      
       screen.listenForNewMessage();
     }
   });
@@ -167,7 +159,8 @@ export default class ChatScreen extends Component {
     var message = messagesCollection.doc();
     var data = {
       message:this.state.message,
-      sender:this.context.currentUser.uid,
+      sender:this.state.userID,
+      receiver:this.state.receiverID,
       time:new Date().toString(),
     }
     message.set(data);

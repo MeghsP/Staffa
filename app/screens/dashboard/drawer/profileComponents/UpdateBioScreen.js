@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Text, View,TextInput, TouchableWithoutFeedback,Image,TouchableOpacity} from 'react-native';
 import Picker from 'react-native-wheel-picker';
-import {AppConsumer} from '../../../context/AppProvider'; 
+import {AppConsumer} from '../../../../context/AppProvider'; 
 
 export default class BioScreen extends Component {
  constructor(args) {
@@ -14,6 +14,12 @@ export default class BioScreen extends Component {
     }
  }
 
+ componentDidMount(){
+  if(this.context.userData && this.context.userData.bio){
+   this.setState(this.context.userData.bio);
+  }
+}
+
  onImageClick(){
   this.context.showImagePickerAlert((image) => {
     this.setState({avatarSource:image});
@@ -25,12 +31,13 @@ export default class BioScreen extends Component {
     this.context.showToast("Please enter short bio");
      return;
   }
-  if(this.state.avatarSource === ""){
-      this.context.showToast("Please select profile picture");
-      return false;
-  }
 
-  this.uploadImage();
+  if(this.state.avatarSource === ""){
+    this.updateData(this.state.profilePicURL);
+  } else {
+    this.uploadImage();
+  }
+  
  }
 
  uploadImage() {
@@ -57,7 +64,7 @@ export default class BioScreen extends Component {
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data);
   this.context.updateUserData((user) => {
     this.context.showLoading(false);
-    this.context.replaceScreen(this,this.context.utilities.strings.APP_SCREEN_SUCCESS);
+    this.context.goBack(this);
   });
  }
 
@@ -67,6 +74,9 @@ export default class BioScreen extends Component {
     {(context) => (
      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
         <View style={{marginTop:10, flexDirection:'row'}}>
+          <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
+            <Image source={require('../../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
+           </TouchableOpacity>
           <View style={{alignItems:'center', flex:1}} >
             <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
             <Text style = {context.utilities.styles.headerInfoTextStyle}>Nearly Done!</Text>
@@ -76,7 +86,7 @@ export default class BioScreen extends Component {
 
             <TouchableWithoutFeedback onPress={() => {this.onImageClick()}}>
               {(this.state.avatarSource === "" && this.state.profilePicURL === "") ?  
-                <Image style={{alignSelf: 'center',width: 100, height: 100, borderRadius: 100/2, marginTop:20}} source={require('../../../images/user.png')} />
+                <Image style={{alignSelf: 'center',width: 100, height: 100, borderRadius: 100/2, marginTop:20}} source={require('../../../../images/user.png')} />
                 : 
                 <Image style={{alignSelf: 'center',width: 100, height: 100, borderRadius: 100/2, marginTop:20}} source={{uri: this.state.avatarSource.length > 0 ?  this.state.avatarSource : this.state.profilePicURL}} />
               }
@@ -114,7 +124,7 @@ export default class BioScreen extends Component {
         </View>
 
         <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onNextClick()}>
-          <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>NEXT</Text>
+          <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>UPDATE</Text>
         </TouchableOpacity>
      </View>
      )} 

@@ -211,8 +211,6 @@ export default class ApiService {
     chatUIDDoc.update({currentTopic:topicName});
   }
 
-
-
   getUserConversationNode(userID, chatUID) {
     var users = firebase.firestore().collection(Strings.FS_COLLECTION_USER_CONVERSATION);
     var userDoc =  users.doc(userID);  
@@ -221,6 +219,7 @@ export default class ApiService {
     return conversation.doc(chatUID);  
   }
 
+  
   getConversationNode(chatUID) {
     var users = firebase.firestore().collection(Strings.FS_COLLECTION_CONVERSATION);
     return users.doc(chatUID);  
@@ -237,7 +236,25 @@ export default class ApiService {
     return false;
   }
 
+  subscribeToNotificationListeners() {
+    const channel = new firebase.notifications.Android.Channel(
+        'DefaultChannelStaffa',
+        'Notifications',
+        firebase.notifications.Android.Importance.Max
+    ).setDescription('A Channel To manage the notifications related to Staffa Application');
+    firebase.notifications().android.createChannel(channel);
+  }
+  
+  displayNotification(notification) {
+    const data = new firebase.notifications.Notification({sound: 'default',show_in_foreground: true})
+      .setNotificationId(notification.notificationId)
+      .setTitle(notification.title)
+      .setBody(notification.body)
+      .setData(notification.data)
+      .android.setChannelId('DefaultChannelStaffa');
 
+    firebase.notifications().displayNotification(data);
+  }
 
   getScreenName(data) {
     if(data.addressData){

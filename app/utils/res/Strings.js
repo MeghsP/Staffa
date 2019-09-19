@@ -42,6 +42,8 @@ const Strings = {
     {name:"100 Miles"}
   ],
 
+  FONT_QMA:'QUEEN OF THE MODERN AGE',
+
   APP_SCREEN_SPLASH:"SplashScreen",
   APP_SCREEN_LOGIN:"LoginScreen",
   APP_SCREEN_SIGNUP:"SignUpScreen",
@@ -63,6 +65,22 @@ const Strings = {
   APP_SCREEN_BIO:"BioScreen",
   APP_SCREEN_BASIC_INFO:"BasicInfoScreen",
   APP_SCREEN_SUCCESS:"SuccessScreen",
+
+  APP_SCREEN_UPDATE_ADDRESS:"UpdateAddressScreen",
+  APP_SCREEN_UPDATE_BASIC_INFO:"UpdateBasicInfoScreen",
+  APP_SCREEN_UPDATE_BIO:"UpdateBioScreen",
+  APP_SCREEN_UPDATE_CERTIFICATE:"UpdateCertificateScreen",
+  APP_SCREEN_UPDATE_DBS:"UpdateDBSScreen",
+  APP_SCREEN_UPDATE_EMPLOYMENT_CONTRACT:"UpdateEmploymentContractScreen",
+  APP_SCREEN_UPDATE_INFO_SHARING:"UpdateInfoSharingScreen",
+  APP_SCREEN_UPDATE_NOTIFICATIONS:"UpdateNotificationsScreen",
+  APP_SCREEN_UPDATE_PRIVACY:"UpdatePrivacyScreen",
+  APP_SCREEN_UPDATE_QUALIFICATIONS:"UpdateQualificationScreen",
+  APP_SCREEN_UPDATE_REFERENCES:"UpdateReferencesScreen",
+  APP_SCREEN_UPDATE_SKILLS:"UpdateSkillsScreen",
+  APP_SCREEN_UPDATE_TERM_CONDITIONS:"UpdateTermsConditionScreen",
+  APP_SCREEN_UPDATE_VERIFICATION:"UpdateVerificationScreen",
+
 
   APP_SCREEN_HOME:"HomeScreen",
   APP_SCREEN_PROFILE:"ProfileScreen",
@@ -87,6 +105,8 @@ const Strings = {
   FS_COLLECTION_CONVERSATION : "Conversations",
   FS_COLLECTION_TOPICS : "Topics",
   FS_COLLECTION_MESSAGES : "Messages",
+
+  FS_COLLECTION_APP_DATA : "AppData",
 
 
   alertLogout:'Are you sure you want to Logout?',

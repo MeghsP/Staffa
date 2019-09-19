@@ -6,27 +6,29 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Strings from '../../../utils/res/Strings';
 
 const PROFILE_OPTIONS = [
-  {name:"Basic Settings", screen:Strings.APP_SCREEN_BASIC_INFO},
-  {name:"Address or Bank ", screen:Strings.APP_SCREEN_ADD_ADDRESS},
-  {name:"Terms & Condition", screen:Strings.APP_SCREEN_TNC},
-  {name:"Employee Contract", screen:Strings.APP_SCREEN_EMP_CONTRACT},
-  {name:"Privacy", screen:Strings.APP_SCREEN_PRIVACY},
-  {name:"Info Sharing", screen:Strings.APP_SCREEN_INFO_SHARING},
-  {name:"Notification", screen:Strings.APP_SCREEN_NOTIFICATION},
-  {name:"Verification", screen:Strings.APP_SCREEN_VERIFICATION},
-  {name:"DBS", screen:Strings.APP_SCREEN_DBS},
-  {name:"Qualification", screen:Strings.APP_SCREEN_QUALIFICATION},
-  {name:"Certificate", screen:Strings.APP_SCREEN_CERTIFICATE},
-  {name:"References", screen:Strings.APP_SCREEN_REFERENCES},
-  {name:"Skills", screen:Strings.APP_SCREEN_SKILLS},
-  {name:"Bio", screen:Strings.APP_SCREEN_BIO}
+  {name:"Basic Settings", screen:Strings.APP_SCREEN_UPDATE_BASIC_INFO},
+  {name:"Address or Bank ", screen:Strings.APP_SCREEN_UPDATE_ADDRESS},
+  {name:"Terms & Condition", screen:Strings.APP_SCREEN_UPDATE_TERM_CONDITIONS},
+  {name:"Employee Contract", screen:Strings.APP_SCREEN_UPDATE_EMPLOYMENT_CONTRACT},
+  {name:"Privacy", screen:Strings.APP_SCREEN_UPDATE_PRIVACY},
+  {name:"Info Sharing", screen:Strings.APP_SCREEN_UPDATE_INFO_SHARING},
+  {name:"Notification", screen:Strings.APP_SCREEN_UPDATE_NOTIFICATIONS},
+  {name:"Verification", screen:Strings.APP_SCREEN_UPDATE_VERIFICATION},
+  {name:"DBS", screen:Strings.APP_SCREEN_UPDATE_DBS},
+  {name:"Qualification", screen:Strings.APP_SCREEN_UPDATE_QUALIFICATIONS},
+  {name:"Certificate", screen:Strings.APP_SCREEN_UPDATE_CERTIFICATE},
+  {name:"References", screen:Strings.APP_SCREEN_UPDATE_REFERENCES},
+  {name:"Skills", screen:Strings.APP_SCREEN_UPDATE_SKILLS},
+  {name:"Bio", screen:Strings.APP_SCREEN_UPDATE_BIO}
 ];
 
 export default class ProfileScreen extends Component {
  constructor(args) {
    super(args);
-   this.state = {
-    }
+ }
+
+ componentDidMount(){
+  this.context.setCurrentContext(this); 
  }
  
  onBackPress = () => {

@@ -21,14 +21,6 @@ updateTotalData(image){
   console.log('updateTotalData array : ' + JSON.stringify(this.state.data));
 }
 
-componentDidMount(){
-  if(this.context.userData && this.context.userData.references){
-   var data = this.context.userData.references;
-   this.setState(data);
-   this.setState({isDataAvailable:true});
-  }
- } 
-
  onScanClick(data, index){
   this.setState({selectedData:data});
   this.setState({selectedIndex:index});
@@ -46,6 +38,7 @@ componentDidMount(){
  }
 
  updateFirestoreData(allData){
+  this.context.showLoading(true);
   setTimeout(()=>{
     var myData = {
       references: {
@@ -54,12 +47,10 @@ componentDidMount(){
     };
     this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, myData);
     this.context.showLoading(false);
-    this.context.updateUserData();
-    if (this.state.isDataAvailable) {
-      this.context.goBack(this);
-    } else {
-      this.context.replaceScreen(this, this.context.utilities.strings.APP_SCREEN_CERTIFICATE);
-    }
+    this.context.updateUserData((user) => {
+      this.context.showLoading(false);
+      this.context.replaceScreen(this, this.context.currentScreen);
+    });
   }, 3000);
  }
 
@@ -137,11 +128,6 @@ componentDidMount(){
     {(context) => (
      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
         <View style={{marginTop:10, flexDirection:'row'}}>
-          {this.state.isDataAvailable && 
-            <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
-              <Image source={require('../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
-            </TouchableOpacity>
-          }
           <View style={{alignItems:'center', flex:1}} >
             <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
             <Text style = {context.utilities.styles.headerInfoTextStyle}>References</Text>
@@ -153,8 +139,13 @@ componentDidMount(){
             {
               this.state.data.map((data,index) => {
                 return (
-                  <View>
-                    <View style = {context.utilities.styles.InputTextBoxStyle}>
+                  <View style={{alignItems:'center',justifyContent:'center'}}>
+                    <View style={{margin:10, height:150, width:150, borderColor:context.utilities.colors.black,borderWidth:1, borderRadius:1}}>
+                        {(data.doc !== "") &&
+                          <Image style={{width:148, height: 148}} source={{uri:data.doc}} />
+                        }
+                    </View>
+                    <View style = {[context.utilities.styles.InputTextBoxStyle, {marginTop:0}]}>
                       <TextInput
                           style = {data.name === '' ? context.utilities.styles.InputTextDisableStyle : context.utilities.styles.InputTextEnableStyle}
                           placeholder = "Name of Reference"
@@ -176,6 +167,7 @@ componentDidMount(){
                         <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle,{width:90,marginTop:5, borderRadius:10, height:50}]}>Upload</Text>
                       </TouchableOpacity>
                     </View>
+                    <View style={{backgroundColor:context.utilities.colors.black, height:1, marginTop:5, width:context.screenWidth}}></View>
                   </View>
                 )
               })
@@ -186,7 +178,7 @@ componentDidMount(){
               <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:30}]}>ADD REFERENCE</Text>
             </TouchableOpacity>
             <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onNextClick()}>
-              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>{this.state.isDataAvailable ? 'UPDATE' :  "NEXT"}</Text>
+              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>NEXT</Text>
             </TouchableOpacity>
      </View>
      )} 

@@ -24,9 +24,9 @@ export default class SuccessScreen extends Component {
         <View style = {context.utilities.styles.baseStyle1}>
             <Text style = {[context.utilities.styles.NewToAppTextStyle,{fontSize:13,fontStyle:'bold', color:context.utilities.colors.appColor}]}>SUCCESS{"\n"}You can now post your profile and apply for shifts.</Text>
         </View>
-            <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onNextClick()}>
-              <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>DONE</Text>
-            </TouchableOpacity>
+        <TouchableOpacity style = {{width:context.screenWidth}} onPress={ () => this.onNextClick()}>
+            <Text style = {[context.utilities.styles.LoginButtonEnableTextStyle, {marginTop:10, marginBottom:30}]}>DONE</Text>
+        </TouchableOpacity>
      </View>
      )} 
      </AppConsumer>

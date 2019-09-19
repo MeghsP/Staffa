@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Text,View,TextInput,TouchableOpacity, Image} from 'react-native';
-import {AppConsumer} from '../../../context/AppProvider'; 
+import {AppConsumer} from '../../../../context/AppProvider'; 
 
-export default class AddAddressScreen extends Component {
+export default class UpdateAddressScreen extends Component {
  constructor(args) {
    super(args);
    this.state = {
@@ -14,7 +14,6 @@ export default class AddAddressScreen extends Component {
       bankName:'',
       accountNumber:'',
       sortCode:'',
-
     }
     this.refAdd1 = React.createRef();
     this.refAdd2 = React.createRef();
@@ -25,6 +24,12 @@ export default class AddAddressScreen extends Component {
     this.refBankName = React.createRef();
     this.refAccountNumber = React.createRef();
     this.refSortCode = React.createRef();
+ }
+
+ componentDidMount(){
+   if(this.context.userData && this.context.userData.addressData){
+    this.setState(this.context.userData.addressData);
+   }
  }
 
  onNextClick(){
@@ -46,7 +51,7 @@ export default class AddAddressScreen extends Component {
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, data); 
   this.context.updateUserData((user) => {
     this.context.showLoading(false);
-    this.context.replaceScreen(this, this.context.currentScreen);
+    this.context.goBack(this);
   });
  }
 
@@ -92,6 +97,9 @@ export default class AddAddressScreen extends Component {
     {(context) => (
      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
        <View style={{marginTop:10, flexDirection:'row'}}>
+          <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
+            <Image source={require('../../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
+          </TouchableOpacity>
           <View style={{alignItems:'center', flex:1}} >
               <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
               <Text style = {context.utilities.styles.headerInfoTextStyle}>Account</Text>
@@ -215,7 +223,7 @@ export default class AddAddressScreen extends Component {
                     </View>
 
                     <TouchableOpacity onPress={ () => this.onNextClick()}>
-                        <Text style = {context.utilities.styles.LoginButtonEnableTextStyle}>NEXT</Text>
+                        <Text style = {context.utilities.styles.LoginButtonEnableTextStyle}>UPDATE</Text>
                     </TouchableOpacity>
               </View>   
         </View>

@@ -3,10 +3,10 @@ import {Text,Picker, View,TextInput,ScrollView,Image, TouchableOpacity} from 're
 import {CheckBox} from 'react-native-elements';
 import moment from 'moment';
 
-import {AppConsumer} from '../../../context/AppProvider'; 
-import ApiService from '../../../network/ApiService';
+import {AppConsumer} from '../../../../context/AppProvider'; 
+import ApiService from '../../../../network/ApiService';
 
-export default class BasicInfoScreen extends Component {
+export default class UpdateBasicInfoScreen extends Component {
  constructor(args) {
    super(args);
    apiService = new ApiService();
@@ -60,9 +60,10 @@ export default class BasicInfoScreen extends Component {
   };
   apiService.updateFirestoreUserData(this.context.currentUser.uid,data);
   this.context.showLoading(false);
-  this.context.updateUserData();
-  this.context.userData.registerData = data.registerData;
-  this.context.goBack(this);
+  this.context.updateUserData((user) => {
+    this.context.showLoading(false);
+    this.context.goBack(this);
+  });
  }
 
  isInputValid(){
@@ -115,7 +116,7 @@ export default class BasicInfoScreen extends Component {
      <View style={context.utilities.styles.root} ref={(ref) => { this.context = context; }}>
         <View style={{marginTop:10, flexDirection:'row'}}>
           <TouchableOpacity style={{position:'absolute', marginLeft:10}} onPress={() => context.goBack(this)}>
-            <Image source={require('../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
+            <Image source={require('../../../../images/back.png')} style={{width:30, height:30}} tintColor={context.utilities.colors.black} />
           </TouchableOpacity>
           <View style={{alignItems:'center', flex:1}} >
             <Text style = {context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
