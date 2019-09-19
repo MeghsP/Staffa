@@ -12,7 +12,7 @@ const PROFILE_OPTIONS = [
   {name:"Employee Contract", screen:Strings.APP_SCREEN_UPDATE_EMPLOYMENT_CONTRACT},
   {name:"Privacy", screen:Strings.APP_SCREEN_UPDATE_PRIVACY},
   {name:"Info Sharing", screen:Strings.APP_SCREEN_UPDATE_INFO_SHARING},
-  {name:"Notification", screen:Strings.APP_SCREEN_UPDATE_NOTIFICATIONS},
+  {name:"Notification", screen:Strings.APP_SCREEN_UPDATE_NOTIFICATION_SETTINGS},
   {name:"Verification", screen:Strings.APP_SCREEN_UPDATE_VERIFICATION},
   {name:"DBS", screen:Strings.APP_SCREEN_UPDATE_DBS},
   {name:"Qualification", screen:Strings.APP_SCREEN_UPDATE_QUALIFICATIONS},

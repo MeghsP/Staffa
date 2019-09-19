@@ -13,7 +13,7 @@ import TermsConditionScreen from './app/screens/auth/signin/TermsConditionScreen
 import EmploymentContractScreen from './app/screens/auth/signin/EmploymentContractScreen';
 import PrivacyScreen from './app/screens/auth/signin/PrivacyScreen';
 import InfoSharingScreen from './app/screens/auth/signin/InfoSharingScreen';
-import NotificationsScreen from './app/screens/auth/signin/NotificationsScreen';
+import NotificationSettingsScreen from './app/screens/auth/signin/NotificationSettingsScreen';
 import BeginVerificationScreen from './app/screens/auth/signin/BeginVerificationScreen';
 import VerificationScreen from './app/screens/auth/signin/VerificationScreen';
 import DBSScreen from './app/screens/auth/signin/DBSScreen';
@@ -32,7 +32,7 @@ import UpdateCertificateScreen from './app/screens/dashboard/drawer/profileCompo
 import UpdateDBSScreen from './app/screens/dashboard/drawer/profileComponents/UpdateDBSScreen';
 import UpdateEmploymentContractScreen from './app/screens/dashboard/drawer/profileComponents/UpdateEmploymentContractScreen';
 import UpdateInfoSharingScreen from './app/screens/dashboard/drawer/profileComponents/UpdateInfoSharingScreen';
-import UpdateNotificationsScreen from './app/screens/dashboard/drawer/profileComponents/UpdateNotificationsScreen';
+import UpdateNotificationSettingsScreen from './app/screens/dashboard/drawer/profileComponents/UpdateNotificationSettingsScreen';
 import UpdatePrivacyScreen from './app/screens/dashboard/drawer/profileComponents/UpdatePrivacyScreen';
 import UpdateQualificationScreen from './app/screens/dashboard/drawer/profileComponents/UpdateQualificationScreen';
 import UpdateReferencesScreen from './app/screens/dashboard/drawer/profileComponents/UpdateReferencesScreen';
@@ -43,6 +43,7 @@ import UpdateVerificationScreen from './app/screens/dashboard/drawer/profileComp
 import HomeScreen from './app/screens/dashboard/HomeScreen';
 import ProfileScreen from './app/screens/dashboard/drawer/ProfileScreen';
 import MessagesScreen from './app/screens/dashboard/drawer/MessagesScreen';
+import NotificationsScreen from './app/screens/dashboard/drawer/NotificationsScreen';
 import ChatScreen from './app/screens/dashboard/drawer/messageComponents/ChatScreen';
 
 let RootStack = createStackNavigator({
@@ -56,7 +57,7 @@ let RootStack = createStackNavigator({
       EmploymentContractScreen:{screen:EmploymentContractScreen},
       PrivacyScreen:{screen:PrivacyScreen},
       InfoSharingScreen:{screen:InfoSharingScreen},
-      NotificationsScreen:{screen:NotificationsScreen},
+      NotificationSettingsScreen:{screen:NotificationSettingsScreen},
       BeginVerificationScreen:{screen:BeginVerificationScreen},
       VerificationScreen:{screen:VerificationScreen},
       DBSScreen:{screen:DBSScreen},
@@ -75,7 +76,7 @@ let RootStack = createStackNavigator({
       UpdateDBSScreen:{screen:UpdateDBSScreen},
       UpdateEmploymentContractScreen:{screen:UpdateEmploymentContractScreen},
       UpdateInfoSharingScreen:{screen:UpdateInfoSharingScreen},
-      UpdateNotificationsScreen:{screen:UpdateNotificationsScreen},
+      UpdateNotificationSettingsScreen:{screen:UpdateNotificationSettingsScreen},
       UpdatePrivacyScreen:{screen:UpdatePrivacyScreen},
       UpdateQualificationScreen:{screen:UpdateQualificationScreen},
       UpdateReferencesScreen:{screen:UpdateReferencesScreen},
@@ -86,6 +87,7 @@ let RootStack = createStackNavigator({
       HomeScreen:{screen:HomeScreen},
       ProfileScreen:{screen:ProfileScreen},
       MessagesScreen:{screen:MessagesScreen},
+      NotificationsScreen:{screen:NotificationsScreen},
       ChatScreen:{screen:ChatScreen},
   },
   {

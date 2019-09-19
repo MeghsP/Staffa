@@ -242,6 +242,19 @@ module.exports = StyleSheet.create({
     flexDirection:'row'
   },
 
+  LeftDrawerBadgeStyle: {
+    fontSize:12,
+    fontWeight:'bold',
+    width:23, 
+    height:23,
+    textAlign:'center',
+    textAlignVertical: "center",    
+    color:Colors.white,
+    marginRight:5,
+    backgroundColor:Colors.headerBGColor,
+    borderRadius:100,
+  },
+
   LeftDrawerOptionsTextStyle: {
     fontSize:16,
     flex:1,

@@ -17,17 +17,6 @@ exports.addChatMessage = functions.firestore
     
     console.log("function addChatMessage parentOne : " + JSON.stringify(event.data.previous));
     
-    // Add Notification to user's data
-    var notificationDoc = admin.firestore().collection(FS_COLLECTION_USERS).doc(newValue.sender).collection(FS_COLLECTION_USER_NOTIFICATIONS).doc();
-    var notificationData = {
-      type: "ChatMessage",
-      screen: "ChatScreen",
-      message: newValue.message,
-      read: 0,
-      time: newValue.time,
-    }
-    notificationDoc.set(notificationData);
-
     // Get sender information
     return admin.firestore().collection(FS_COLLECTION_USERS).doc(newValue.sender).get()
       .then(doc => {

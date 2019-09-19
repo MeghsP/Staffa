@@ -40,6 +40,10 @@ export default class AppProvider extends React.Component {
       currentChatReceiver: null,
       FCMToken: null,
 
+      // Notifications of user
+      userNotificationCount:0,
+      userNotifications:[],
+
       openFromNotification:false,
       notificationData:null,
 
@@ -74,6 +78,7 @@ export default class AppProvider extends React.Component {
         }
         this.getFCMToken();
         this.listenNotifications();
+        this.getUserNotifications(user.uid);
       } else {
         this.setCurrentScreen(Strings.APP_SCREEN_LOGIN);
         if (this.callBack) {
@@ -195,6 +200,27 @@ export default class AppProvider extends React.Component {
     this.setState({ currentScreen: Strings.APP_SCREEN_LOGIN });
   }
 
+
+  getUserNotifications(userID){
+    console.log("getUserNotifications : " + userID);
+    var notificationNode = apiService.getUserNotificationNode(userID);
+    this.userNotificationListener = notificationNode.orderBy("time", "desc").onSnapshot((querySnapshot) => {
+      var notifications = [];
+      querySnapshot.forEach((doc) => {
+        var data = doc.data();
+        console.log("getUserNotifications data : " + JSON.stringify(data));
+        if(data.read === 0){
+          data.id = doc.id;
+          notifications.push(data);
+          console.log("getUserNotifications inside if : " + JSON.stringify(data));
+        }
+      });
+      this.setState({userNotificationCount:notifications.length});
+      this.setState({userNotifications:notifications});
+      console.log("getUserNotifications length : " + notifications.length);
+    });
+  }
+
   /*
     Get logged-in user's data from FireStore and
     set current screen as per data entered by user
@@ -251,6 +277,7 @@ export default class AppProvider extends React.Component {
     this.onTokenRefreshListener();
     this.notificationAppAlreadyOpen();
     this.notificationOpenApp();
+    this.userNotificationListener();
   }
 
   /*
@@ -442,6 +469,10 @@ export default class AppProvider extends React.Component {
         openGallery: this.openGallery,
         openFromNotification:this.state.openFromNotification,
         performNotificationAction:this.performNotificationAction,
+
+        // User Notifications
+        userNotificationCount:this.state.userNotificationCount,
+        userNotifications:this.state.userNotifications,
       }}>
         {this.props.children}
 

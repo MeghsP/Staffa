@@ -42,6 +42,8 @@ const Strings = {
     {name:"100 Miles"}
   ],
 
+  DISPLAY_TIME_FORMAT_1 : 'DD-MMM-YYYY hh:mm a',
+
   FONT_QMA:'QUEEN OF THE MODERN AGE',
 
   APP_SCREEN_SPLASH:"SplashScreen",
@@ -53,7 +55,7 @@ const Strings = {
   APP_SCREEN_TNC:"TermsConditionScreen",
   APP_SCREEN_EMP_CONTRACT:"EmploymentContractScreen",
   APP_SCREEN_INFO_SHARING:"InfoSharingScreen",
-  APP_SCREEN_NOTIFICATION:"NotificationsScreen",
+  APP_SCREEN_NOTIFICATION_SETTINGS:"NotificationSettingsScreen",
   APP_SCREEN_BEGIN_VERIFICATION:"BeginVerificationScreen",
   APP_SCREEN_VERIFICATION:"VerificationScreen",
   APP_SCREEN_PRIVACY:"PrivacyScreen",
@@ -73,7 +75,7 @@ const Strings = {
   APP_SCREEN_UPDATE_DBS:"UpdateDBSScreen",
   APP_SCREEN_UPDATE_EMPLOYMENT_CONTRACT:"UpdateEmploymentContractScreen",
   APP_SCREEN_UPDATE_INFO_SHARING:"UpdateInfoSharingScreen",
-  APP_SCREEN_UPDATE_NOTIFICATIONS:"UpdateNotificationsScreen",
+  APP_SCREEN_UPDATE_NOTIFICATION_SETTINGS:"UpdateNotificationSettingsScreen",
   APP_SCREEN_UPDATE_PRIVACY:"UpdatePrivacyScreen",
   APP_SCREEN_UPDATE_QUALIFICATIONS:"UpdateQualificationScreen",
   APP_SCREEN_UPDATE_REFERENCES:"UpdateReferencesScreen",
@@ -85,6 +87,7 @@ const Strings = {
   APP_SCREEN_HOME:"HomeScreen",
   APP_SCREEN_PROFILE:"ProfileScreen",
   APP_SCREEN_MESSAGES:"MessagesScreen",
+  APP_SCREEN_NOTIFICATIONS:"NotificationsScreen",
   APP_SCREEN_CHAT:"ChatScreen",
 
   registerNotificationMsg:'We need to notify you of compliance related matters, payments and offers relating to your vocation and aspirations. \n\n You can change this settings at any time in your device settings.',
@@ -105,6 +108,7 @@ const Strings = {
   FS_COLLECTION_CONVERSATION : "Conversations",
   FS_COLLECTION_TOPICS : "Topics",
   FS_COLLECTION_MESSAGES : "Messages",
+  FS_COLLECTION_NOTIFICATIONS : "Notifications",
 
   FS_COLLECTION_APP_DATA : "AppData",
 
@@ -113,6 +117,7 @@ const Strings = {
 
   msgNoContactsAvailable:'No contacts available',
   msgNoChatFound:'No chats found',
+  msgNoNotificationsFound:'No notifications found',
   msgSomethingWentWrong:'Something went wrong. Please try later',
 
   dialogButtonOK:"OK",

@@ -3,7 +3,7 @@ import {Text,View,Image,ScrollView,TouchableOpacity} from 'react-native';
 import {CheckBox} from 'react-native-elements';
 import {AppConsumer} from '../../../../context/AppProvider'; 
 
-export default class NotificationsScreen extends Component {
+export default class UpdateNotificationSettingsScreen extends Component {
  constructor(args) {
    super(args);
    this.state = {

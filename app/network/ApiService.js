@@ -2,6 +2,8 @@ import firebase from 'react-native-firebase';
 import AsyncStorage from '@react-native-community/async-storage';
 import Strings from '../utils/res/Strings';
 import UUIDGenerator from 'react-native-uuid-generator';
+import moment from 'moment';
+
 export default class ApiService {
 
   getUserData(uid, callBack){
@@ -138,27 +140,6 @@ export default class ApiService {
     });
    }
 
-  //  getTopics(chatRef,data, callBack){
-  //   var topics = [];
-  //   var selectedTopic = {};
-  //   var topicsRef = chatRef.collection(Strings.FS_COLLECTION_TOPICS);
-  //   topicsRef.get().then(snapshot => {
-  //     snapshot.docs.map((doc) => {
-  //       console.log("ApiService getTopics id : " + doc.id); 
-  //       var singleTopic = doc.data();
-  //       var topicName =  doc.id;
-  //       var topic = {topicName:topicName, topicData:singleTopic};
-  //       topics.push(topic);
-  //       if(topicName === data.currentTopic){
-  //         selectedTopic = topic;
-  //       }
-  //     });
-  //     callBack(false, {exist:true, data:{currentTopic:data.currentTopic, topics:topics, selectedTopic:selectedTopic}});
-  //   }).catch(err => {
-  //      callBack(true, null);
-  //   });
-  //  }
-
    getUserData(userID, callBack){
     var users = firebase.firestore().collection(Strings.FS_COLLECTION_USERS);
     var userDoc =  users.doc(userID);  
@@ -170,6 +151,19 @@ export default class ApiService {
    }
 
 
+   getUserNotificationNode(userID){
+      return firebase.firestore().collection(Strings.FS_COLLECTION_USERS).doc(userID).collection(Strings.FS_COLLECTION_NOTIFICATIONS);
+   }
+
+   markNotificationAsRead(userID, item){
+     item.read = 1;
+     var notification = getUserNotificationNode(userID);
+     notification.doc(item.id).update(data);
+   }
+
+   getFormattedTime(time, format){
+    return moment(time).format(format)
+   }
 
 
   setNewConversation(userID, receiverID, chatUID){
@@ -270,45 +264,45 @@ export default class ApiService {
                         if(data.references){
                           if(data.skills){
                             if(data.bio){
-                              return "HomeScreen";
+                              return Strings.APP_SCREEN_HOME;
                             } else {
-                              return "BioScreen";
+                              return Strings.APP_SCREEN_BIO;
                             }
                           } else {
-                            return "SkillsScreen";
+                            return Strings.APP_SCREEN_SKILLS;
                           }
                         } else {
-                          return "ReferencesScreen";
+                          return Strings.APP_SCREEN_REFERENCES;
                         }
                       } else {
-                        return "CertificateScreen";
+                        return Strings.APP_SCREEN_CERTIFICATE;
                       }
                     } else {
-                      return "QualificationScreen";
+                      return Strings.APP_SCREEN_QUALIFICATION;
                     }
                   } else {
-                    return "DBSScreen";
+                    return Strings.APP_SCREEN_DBS;
                   }
                 } else {
-                  return "VerificationScreen";
+                  return Strings.APP_SCREEN_VERIFICATION;
                 }
               } else {
-               return "NotificationsScreen";
+                return Strings.APP_SCREEN_NOTIFICATION_SETTINGS;
               }
             } else {
-              return "InfoSharingScreen";
+              return Strings.APP_SCREEN_INFO_SHARING;
             }
           } else {
-            return "PrivacyScreen";
+            return Strings.APP_SCREEN_PRIVACY;
           }
         } else {
-          return "EmploymentContractScreen";
+          return Strings.APP_SCREEN_EMP_CONTRACT;
         }
       } else {
-        return "TermsConditionScreen";
+        return Strings.APP_SCREEN_TNC;
       }  
     } else {
-      return "AddAddressScreen";
+      return Strings.APP_SCREEN_ADD_ADDRESS;
     }
   }
 }

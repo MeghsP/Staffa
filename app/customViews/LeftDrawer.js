@@ -7,12 +7,14 @@ import Strings from '../utils/res/Strings';
 const OPTION_PROFILE_ID = 1;
 const OPTION_SETTINGS_ID = OPTION_PROFILE_ID + 1;
 const OPTION_MESSAGES_ID = OPTION_SETTINGS_ID + 1;
-const OPTION_LOGOUT_ID = OPTION_MESSAGES_ID + 1;
+const OPTION_NOTIFICATIONS_ID = OPTION_MESSAGES_ID + 1;
+const OPTION_LOGOUT_ID = OPTION_NOTIFICATIONS_ID + 1;
 
 const DRAWER_OPTIONS = [
   {id:OPTION_PROFILE_ID, name:"Profile", screen:Strings.APP_SCREEN_PROFILE, icon:"md-person"},
   {id:OPTION_SETTINGS_ID, name:"Settings", screen:"", icon:"md-settings"},
   {id:OPTION_MESSAGES_ID, name:"Messages", screen:Strings.APP_SCREEN_MESSAGES, icon:"md-chatboxes"},
+  {id:OPTION_NOTIFICATIONS_ID, name:"Notifications", screen:Strings.APP_SCREEN_NOTIFICATIONS, icon:"md-notifications"},
   {id:OPTION_LOGOUT_ID, name:"Logout", screen:"", icon:"ios-power"},
 ];
 export default class LeftDrawer extends Component{
@@ -92,7 +94,10 @@ export default class LeftDrawer extends Component{
                                       <View style={context.utilities.styles.LeftDrawerOptionsViewStyle}>
                                         <Icon name={item.icon} size={24} color={context.utilities.colors.black}/>
                                         <Text  style={context.utilities.styles.LeftDrawerOptionsTextStyle}>{item.name}</Text>
-                                      </View>
+                                        {item.id === OPTION_NOTIFICATIONS_ID && context.userNotificationCount > 0 &&
+                                          <Text  style={context.utilities.styles.LeftDrawerBadgeStyle}>{""+context.userNotificationCount}</Text>
+                                        } 
+                                        </View>
                                     </View>
                                   </TouchableWithoutFeedback>
                                 )
