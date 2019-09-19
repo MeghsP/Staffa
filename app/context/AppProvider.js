@@ -13,7 +13,6 @@ import ImagePicker from 'react-native-image-crop-picker';
 import LeftDrawer from '../customViews/LeftDrawer.js';
 import CustomDialog from '../customViews/dialog/CustomDialog.js';
 import NetInfo from "@react-native-community/netinfo";
-import type, { Notification, NotificationOpen } from 'react-native-firebase';
 
 import Colors from '../utils/res/Colors';
 import Styles from '../utils/res/Styles';
@@ -75,6 +74,11 @@ export default class AppProvider extends React.Component {
         }
         this.getFCMToken();
         this.listenNotifications();
+      } else {
+        this.setCurrentScreen(Strings.APP_SCREEN_LOGIN);
+        if (this.callBack) {
+          this.callBack(null);
+        }
       }
     })
   }
