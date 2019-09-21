@@ -87,13 +87,9 @@ export default class ApiService {
           snapshot => {
             console.log("ApiService uploadImage state : " + firebase.storage.TaskState.SUCCESS);
             if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
-              // allImages.push(snapshot.downloadURL);
               console.log("ApiService uploadImage URL : " + snapshot.downloadURL);
               callBack("", snapshot.downloadURL);
             } 
-            //  else {
-            //   callBack("Error", "");
-            // }
           },
           error => {
             callBack("Error", "");
@@ -116,11 +112,19 @@ export default class ApiService {
    userDoc.update(data);
   }
 
-  getChatUID(uid1, uid2){
+  // getChatUID(uid1, uid2){
+  //   if(uid1 < uid2){
+  //     return uid1 + uid2;  
+  //   } else {
+  //     return uid2 + uid1;
+  //   }
+  //  }
+
+   getChatUID(uid1, uid2, topicName){
     if(uid1 < uid2){
-      return uid1 + uid2;  
+      return uid1 + uid2 + "%" + topicName.toLowerCase();  
     } else {
-      return uid2 + uid1;
+      return uid2 + uid1 + "%" + topicName.toLowerCase();
     }
    }
 
@@ -155,10 +159,16 @@ export default class ApiService {
       return firebase.firestore().collection(Strings.FS_COLLECTION_USERS).doc(userID).collection(Strings.FS_COLLECTION_NOTIFICATIONS);
    }
 
+   getConversationMessagesNode(chatUID){
+    var chatRef = firebase.firestore().collection(Strings.FS_COLLECTION_CONVERSATION).doc(chatUID);
+    return chatRef.collection(Strings.FS_COLLECTION_MESSAGES);
+    // return topicsRef.doc(this.state.currentTopic).collection(Strings.FS_COLLECTION_MESSAGES);
+   }
+
    markNotificationAsRead(userID, item){
      item.read = 1;
-     var notification = getUserNotificationNode(userID);
-     notification.doc(item.id).update(data);
+     var notification = this.getUserNotificationNode(userID);
+     notification.doc(item.id).update(item);
    }
 
    getFormattedTime(time, format){
@@ -166,38 +176,31 @@ export default class ApiService {
    }
 
 
-  setNewConversation(userID, receiverID, chatUID){
+  setNewConversation(userID, receiverID, chatUID,topicName){
     // Entry to Sender Conversation collection
     var chatDoc = this.getUserConversationNode(userID, chatUID);
     var data = {
-        topics:[],
-        senderID:receiverID
+        topicName:topicName,
+        receiverID:receiverID,
+        senderID:userID,
+        lastMessageID:''
     };
     chatDoc.set(data);
 
     // Entry to Receiver Conversation collection
     chatDoc = this.getUserConversationNode(receiverID, chatUID);
     data = {
-        topics:[],
-        senderID:userID
+        topicName:topicName,
+        receiverID:userID,
+        senderID:receiverID,
+        lastMessageID:''
     };
     chatDoc.set(data);
-
-    // Entry to Conversation collection
-    var chatUIDDoc = this.getConversationNode(chatUID);  
-    chatUIDDoc.set({currentTopic:""});
   }
 
   addNewTopicNode(topicName, chatUID) {
     var chatUIDDoc = this.getConversationNode(chatUID); 
-    chatUIDDoc.set({currentTopic:topicName});
-    var conversation = chatUIDDoc.collection(Strings.FS_COLLECTION_TOPICS); 
-    var topicDoc = conversation.doc(topicName); 
-    var data = {
-          unseenCount:0,
-          lastMessageID:0,
-    };
-    topicDoc.set(data);
+    chatUIDDoc.set({topicName:topicName});
   }
 
   updateCurrentTopic(topicName, chatUID) {
@@ -213,21 +216,41 @@ export default class ApiService {
     return conversation.doc(chatUID);  
   }
 
+  getUserConversationNodeForChat(userID) {
+    var users = firebase.firestore().collection(Strings.FS_COLLECTION_USER_CONVERSATION);
+    return  users.doc(userID).collection(Strings.FS_COLLECTION_CONVERSATION);  
+  }
+
+  isUserConversationExist(userID, callBack) {
+    var users = firebase.firestore().collection(Strings.FS_COLLECTION_USER_CONVERSATION);
+    var coversation =  users.doc(userID); 
+    coversation.get().then(doc => {
+      callBack(doc.exists);
+    }); 
+  }
+
   
   getConversationNode(chatUID) {
     var users = firebase.firestore().collection(Strings.FS_COLLECTION_CONVERSATION);
     return users.doc(chatUID);  
   }
 
-  isTopicExist(topicName, topics) {
-    topics.map((topic) => {
-      if(topic.topicName.toLowerCase() === topicName.toLowerCase()){
-        return true;
-      } else {
-        return false;
-      }
-    });
-    return false;
+  // isTopicExist(topicName, topics) {
+  //   topics.map((topic) => {
+  //     if(topic.topicName.toLowerCase() === topicName.toLowerCase()){
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   });
+  //   return false;
+  // }
+
+  isTopicExist(chatUID, callBack) {
+    var conversationNode = this.getConversationNode(chatUID);
+    conversationNode.get().then(querySnapshot => {
+        callBack(querySnapshot.exists);
+    })
   }
 
   subscribeToNotificationListeners() {

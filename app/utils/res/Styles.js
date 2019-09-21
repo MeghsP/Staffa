@@ -112,6 +112,17 @@ module.exports = StyleSheet.create({
     textAlign: 'center'
   },
 
+  MarkReadTextStyle: { 
+    padding:5,
+    fontSize:9,
+    color:Colors.mediumGray,
+    borderRadius: 5,
+    borderWidth:1,
+    borderColor: Colors.mediumGray,
+    textAlign: 'center',
+    textAlignVertical:'center'
+  },
+
   QualificationScanButtonStyle: { 
     fontWeight:'bold',
     color:Colors.white,
@@ -316,6 +327,61 @@ module.exports = StyleSheet.create({
     fontSize:14,
     marginLeft:10,
     marginRight:10
+  },
+
+  ChatsViewTopicNameTextStyle:{
+    color:Colors.mediumGray,
+    fontSize:12,
+    fontWeight:'bold',
+    marginRight:10
+  },
+
+  ChatsViewLastMessageTextStyle:{
+    flex:1,
+    color:Colors.mediumGray,
+    fontSize:12,
+    marginLeft:10,
+    marginRight:10
+  },
+
+  ChatsViewLastMessageDateStyle:{
+    color:Colors.mediumGray,
+    fontSize:12,
+    marginRight:10
+  },
+
+  ChatViewReceiverStyle:{
+    width: '60%', 
+    alignSelf: "flex-start",
+    backgroundColor: "#7cb342", 
+    borderRadius: 5, 
+    marginBottom: 5, 
+    marginTop: 5
+  },
+
+  ChatViewSenderStyle:{
+    width: '60%', 
+    alignSelf: "flex-end",
+    backgroundColor: "#00897b", 
+    borderRadius: 5, 
+    marginBottom: 5, 
+    marginTop: 5
+  },
+
+  ChatViewMessageStyle:{
+    color: Colors.white, 
+    paddingLeft: 7, 
+    paddingRight: 7, 
+    paddingTop: 7, 
+    fontSize: 16
+  },
+
+  ChatViewDateStyle:{
+    color: Colors.mediumGray, 
+    paddingRight: 3, 
+    paddingBottom: 3, 
+    fontSize: 10, 
+    alignSelf: 'flex-end'
   },
 
   NoDataTextStyle:{

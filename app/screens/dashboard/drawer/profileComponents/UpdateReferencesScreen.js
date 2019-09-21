@@ -44,6 +44,7 @@ componentDidMount(){
  }
 
  updateFirestoreData(allData){
+  this.context.showLoading(true);
   setTimeout(()=>{
     var myData = {
       references: {
@@ -65,6 +66,7 @@ componentDidMount(){
   var previousEntry = allData[allData.length - 1];
   if(previousEntry.name === ""){
     this.context.showToast("Please enter name for previous document");
+    return;
   }  
   if(previousEntry.doc === "" && previousEntry.docURL === ""){
     this.context.showToast("Please upload doc for previous document");

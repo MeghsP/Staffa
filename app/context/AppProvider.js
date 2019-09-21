@@ -97,8 +97,6 @@ export default class AppProvider extends React.Component {
       var FCM = firebase.messaging();
       FCM.requestPermission();
       FCM.getToken().then(token => {
-        console.log("getFCMToken token : " + token);
-        this.showToast("getFCMToken token : " + token);
         var data = { FCMToken: token };
         apiService.updateFirestoreUserData(this.state.user.uid, data);
       });
@@ -200,24 +198,19 @@ export default class AppProvider extends React.Component {
     this.setState({ currentScreen: Strings.APP_SCREEN_LOGIN });
   }
 
-
   getUserNotifications(userID){
-    console.log("getUserNotifications : " + userID);
     var notificationNode = apiService.getUserNotificationNode(userID);
     this.userNotificationListener = notificationNode.orderBy("time", "desc").onSnapshot((querySnapshot) => {
       var notifications = [];
       querySnapshot.forEach((doc) => {
         var data = doc.data();
-        console.log("getUserNotifications data : " + JSON.stringify(data));
         if(data.read === 0){
           data.id = doc.id;
           notifications.push(data);
-          console.log("getUserNotifications inside if : " + JSON.stringify(data));
         }
       });
       this.setState({userNotificationCount:notifications.length});
       this.setState({userNotifications:notifications});
-      console.log("getUserNotifications length : " + notifications.length);
     });
   }
 
@@ -272,7 +265,6 @@ export default class AppProvider extends React.Component {
 
   componentWillUnmount() {
     this.fireBaseListener && this.fireBaseListener();
-    this.foregroundMessageReceiver.remove();
     this.notificationListener();
     this.onTokenRefreshListener();
     this.notificationAppAlreadyOpen();

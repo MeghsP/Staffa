@@ -38,19 +38,19 @@ export default class QualificationScreen extends Component {
   });
  }
 
- updateFirestoreData(allData){
-  this.context.showLoading = true;
+ updateFirestoreData(screen, allData){
+  screen.context.showLoading(true);
   setTimeout(()=>{
     var myData = {
       qualification: {
         data: allData
       }
     };
-    this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid, myData);
-    this.context.showLoading(false);
-    this.context.updateUserData((user) => {
-      this.context.showLoading(false);
-      this.context.replaceScreen(this, this.context.currentScreen);
+    screen.context.apiService.updateFirestoreUserData(screen.context.currentUser.uid, myData);
+    screen.context.showLoading(false);
+    screen.context.updateUserData((user) => {
+      screen.context.showLoading(false);
+      screen.context.replaceScreen(screen, screen.context.currentScreen);
     });
   }, 3000);
  }
@@ -62,6 +62,7 @@ export default class QualificationScreen extends Component {
   var previousEntry = allData[allData.length - 1];
   if(previousEntry.name === ""){
     this.context.showToast("Please enter name for previous document");
+    return;
   }  
   if(previousEntry.doc === "" && previousEntry.docURL === ""){
     this.context.showToast("Please upload doc for previous document");
@@ -73,7 +74,7 @@ export default class QualificationScreen extends Component {
 
   this.context.showLoading(true);
   var allData =  this.state.data;
-
+  var screen = this;
   allData.map((data,index) => {
     if(data.doc.length > 0){
       var filePath = this.context.currentUser.uid +"/"+this.context.utilities.strings.FS_FILE_DIR_QUALIfICATION;
@@ -84,14 +85,14 @@ export default class QualificationScreen extends Component {
         allData[index].docURL = response;
         allData[index].doc = "";
         if(index === allData.length - 1){
-          this.updateFirestoreData(allData);          
+          screen.updateFirestoreData(screen, allData);          
         }
       })
     } else {
       allData[index].doc = "";
       console.log("onNextClick uploadImage else index : " + index);
       if(index === allData.length - 1){
-        this.updateFirestoreData(allData);
+        screen.updateFirestoreData(screen, allData);
       }
     }
   });

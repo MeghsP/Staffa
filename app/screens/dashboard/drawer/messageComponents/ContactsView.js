@@ -46,7 +46,7 @@ onCollectionUpdate = (querySnapshot) => {
 
  onItemClick(item) {
   this.context.setChatReceiver(item);
-  this.context.moveToScreenPayload(this.props.screen, this.context.utilities.strings.APP_SCREEN_CHAT,{showDialog:true});
+  this.context.moveToScreenPayload(this.props.screen, this.context.utilities.strings.APP_SCREEN_CHAT,{currentTopic:""});
  }
 
  render() {

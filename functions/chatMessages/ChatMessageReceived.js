@@ -3,10 +3,10 @@ const admin = require('firebase-admin');
 
 const FS_COLLECTION_CONVERSATION = "Conversations";
 const FS_COLLECTION_USERS = "Users";
-const FS_COLLECTION_USER_NOTIFICATIONS = "Notifications";
+const FS_COLLECTION_MESSAGES = "Messages";
 
 exports.addChatMessage = functions.firestore
-  .document(FS_COLLECTION_CONVERSATION + "/{docID}/Topics/{topicID}/Messages/{id}")
+  .document(FS_COLLECTION_CONVERSATION + "/{chatID}/"+ FS_COLLECTION_MESSAGES +"/{id}")
   .onCreate(event => {
     console.log("function addChatMessage event : " + JSON.stringify(event));
 
@@ -24,32 +24,27 @@ exports.addChatMessage = functions.firestore
         var senderName = docData.registerData.firstName + " " + docData.registerData.lastName;
 
         // Get receiver's FCM Token
-        admin.firestore().collection(FS_COLLECTION_USERS).doc(newValue.receiver).get()
+        return admin.firestore().collection(FS_COLLECTION_USERS).doc(newValue.receiver).get()
           .then(receiverDoc => {
             var receiverData = receiverDoc.data();
-
-            // Get receiver's notification count
-            admin.firestore().collection(FS_COLLECTION_USERS).doc(newValue.receiver).collection(FS_COLLECTION_USER_NOTIFICATIONS).get()
-              .then(snapshots => {
-                console.log("function addChatMessage snapshots size: " + snapshots.size);
-                var badgeCount = "" + (snapshots.size + 1);
-                if (receiverData.FCMToken) {
-                  console.log("function addChatMessage pushToken : " + receiverData.FCMToken);
-                  let payload = {
-                    notification: {
-                      title: senderName,
-                      body: newValue.message,
-                      badge: badgeCount,
-                      sound: 'default'
-                    },
-                    data:{
-                      type: "ChatMessage",
-                      screen: "ChatScreen",
-                    },
-                  }
-                  return admin.messaging().sendToDevice(receiverData.FCMToken, payload);
-                }
-              });
+            if (receiverData.FCMToken) {
+              console.log("function addChatMessage pushToken : " + receiverData.FCMToken);
+              let payload = {
+                notification: {
+                  title: senderName,
+                  body: newValue.message,
+                  badge: "1",
+                  sound: 'default'
+                },
+                data:{
+                  type: "ChatMessage",
+                  screen: "ChatScreen",
+                },
+              }
+              return admin.messaging().sendToDevice(receiverData.FCMToken, payload);
+            } else {
+              return "";
+            }
           });
       });
   });

@@ -39,7 +39,7 @@ exports.updateContract = functions.firestore
     // Get all user's to send push notification
     return admin.firestore().collection(FS_COLLECTION_USERS).get()
       .then(snapshot => {
-        snapshot.forEach(doc => {
+        return snapshot.forEach(doc => {
           var updatedData = null;
           var docData = doc.data();
           switch (screen) {
@@ -53,7 +53,7 @@ exports.updateContract = functions.firestore
               updatedData = { isTermsAccepted: false };
               break;
             case "InfoSharingScreen":
-              updatedData = { infoSharing: admin.firestore().FieldValue.delete() };
+              updatedData = { infoSharing: admin.firestore.FieldValue.delete() };
               break;
           }
 
@@ -72,25 +72,20 @@ exports.updateContract = functions.firestore
           if (updatedData) {
             admin.firestore().collection(FS_COLLECTION_USERS).doc(doc.id).update(updatedData);
           }
-
-          // Retrieve all users notifications to get badge count
-          admin.firestore().collection(FS_COLLECTION_USERS).doc(doc.id).collection(FS_COLLECTION_USER_NOTIFICATIONS).get()
-            .then(snapshots => {
-              console.log("function updatePolicies snapshots size: " + snapshots.size);
-              var badgeCount = "" + (snapshots.size + 1);
-              if (docData.FCMToken) {
-                console.log("function updatePolicies pushToken : " + docData.FCMToken);
-                let payload = {
-                  notification: {
-                    title: title,
-                    body: message,
-                    badge: badgeCount,
-                    sound: 'default'
-                  }
-                }
-                return admin.messaging().sendToDevice(docData.FCMToken, payload);
+          if (docData.FCMToken) {
+            console.log("function updatePolicies pushToken : " + docData.FCMToken);
+            let payload = {
+              notification: {
+                title: title,
+                body: message,
+                badge: "1",
+                sound: 'default'
               }
-            });
+            }
+            return admin.messaging().sendToDevice(docData.FCMToken, payload);
+          } else {
+            return "";
+          }
         });
       });
   });

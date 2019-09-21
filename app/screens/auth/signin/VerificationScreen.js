@@ -27,7 +27,7 @@ export default class VerificationScreen extends Component {
   this.context.apiService.uploadImage(filePath,this.state.avatarSource,(error, response) => {
     console.log("onNextClick response : " + response);
     console.log("onNextClick error : " + error);
-    if(response.length > 0){
+    if(error === ""){
       this.updateData(response);
     } else {
       this.context.showToast("File not uploaded");
