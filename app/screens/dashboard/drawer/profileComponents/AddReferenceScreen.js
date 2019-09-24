@@ -2,25 +2,18 @@ import React, { Component } from 'react';
 import { Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
 import { AppConsumer } from '../../../../context/AppProvider';
 
-export default class UpdateQualificationScreen extends Component {
+export default class AddReferenceScreen extends Component {
   constructor(args) {
     super(args);
     this.state = {
-      selectedData: '',
-      selectedIndex: '',
+      data: { name: '', doc: '', docURL: '' }
     }
   }
 
-  componentDidMount() {
-    var index = this.props.navigation.state.params.index;
-    this.setState({ selectedIndex: index });
-    this.setState({ selectedData: this.context.userData.qualification.data[index] });
-  }
-
   updateTotalData(image) {
-    var data = this.state.selectedData;
+    var data = this.state.data;
     data.doc = image;
-    this.setState({ selectedData: data });
+    this.setState({ data: data });
   }
 
   onUploadClick() {
@@ -35,46 +28,48 @@ export default class UpdateQualificationScreen extends Component {
     });
   }
 
-  updateFirestoreData(screen, data) {
+  updateFirestoreData(screen, singleData) {
     screen.context.showLoading(true);
-    var allData = this.context.userData.qualification.data;
-    allData[this.state.selectedIndex] = data;
-    var myData = {
-      qualification: {
-        data: allData
-      }
-    };
+    var allData = [];
+    if (this.context.userData.references) {
+      allData = this.context.userData.references.data;
+    }
+    console.log("onNextClick updateFirestoreData length : " + allData.length);
+    allData.push(singleData);
+    console.log("onNextClick updateFirestoreData length 1 : " + allData.length);
+    var myData = { references: { data: allData } };
     screen.context.apiService.updateFirestoreUserData(screen.context.currentUser.uid, myData);
     screen.context.updateUserData((user) => {
+      console.log("onNextClick updateFirestoreData length 2 : " + this.context.userData.references.data.length);
       screen.context.showLoading(false);
       screen.context.goBack(screen);
     });
   }
 
   onNextClick() {
-    if (this.state.selectedData.name === "") {
-      this.context.showToast("Please enter qualification name");
+    if (this.state.data.name === "") {
+      this.context.showToast("Please enter reference name");
       return;
     }
-    var data = this.state.selectedData;
-    var screen = this;
-    if (data.doc.length > 0) {
-      screen.context.showLoading(true);
-      var filePath = this.context.currentUser.uid + "/" + this.context.utilities.strings.FS_FILE_DIR_QUALIfICATION;
-      this.context.apiService.uploadImage(filePath, data.doc, (error, response) => {
-        console.log("onNextClick uploadImage response : " + response);
-        data.docURL = response;
-        this.updateFirestoreData(screen, data);
-      });
-    } else {
-      this.updateFirestoreData(screen, data);
+    if (this.state.data.doc === "") {
+      this.context.showToast("Please select document");
+      return;
     }
+    var data = this.state.data;
+    var screen = this;
+    screen.context.showLoading(true);
+    var filePath = this.context.currentUser.uid + "/" + this.context.utilities.strings.FS_FILE_DIR_REFERENCES;
+    this.context.apiService.uploadImage(filePath, data.doc, (error, response) => {
+      console.log("onNextClick uploadImage response : " + response);
+      data.docURL = response;
+      this.updateFirestoreData(screen, data);
+    });
   }
 
   updateTextChange(text) {
-    var currentData = this.state.selectedData;
+    var currentData = this.state.data;
     currentData.name = text;
-    this.setState({ selectedData: currentData });
+    this.setState({ data: currentData });
   }
 
   render() {
@@ -88,24 +83,24 @@ export default class UpdateQualificationScreen extends Component {
               </TouchableOpacity>
               <View style={{ alignItems: 'center', flex: 1 }} >
                 <Text style={context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
-                <Text style={context.utilities.styles.headerInfoTextStyle}>Update Qualification</Text>
+                <Text style={context.utilities.styles.headerInfoTextStyle}>Add Reference</Text>
               </View>
             </View>
             <View style={context.utilities.styles.baseStyle1}>
               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                 <View style={context.utilities.styles.AddQualificationImageBGStyle}>
-                  <Image style={context.utilities.styles.AddQualificationImageStyle} source={{ uri: this.state.selectedData.doc ? this.state.selectedData.doc : this.state.selectedData.docURL }} />
+                  <Image style={context.utilities.styles.AddQualificationImageStyle} source={{ uri: this.state.data.doc }} />
                 </View>
                 <View style={[context.utilities.styles.InputTextBoxStyle, { marginTop: 0 }]}>
                   <TextInput
-                    style={this.state.selectedData.name === '' ? context.utilities.styles.InputTextDisableStyle : context.utilities.styles.InputTextEnableStyle}
-                    placeholder="Name of Qualification"
+                    style={this.state.data.name === '' ? context.utilities.styles.InputTextDisableStyle : context.utilities.styles.InputTextEnableStyle}
+                    placeholder="Name of Reference"
                     onChangeText={(text) => { this.updateTextChange(text) }}
                     returnKeyType={"done"}
                     underlineColorAndroid='transparent'
                     placeholderTextColor={context.utilities.colors.hintColor}
                     textAlign={'center'}
-                    value={this.state.selectedData.name}
+                    value={this.state.data.name}
                   />
                 </View>
                 <View style={{ flexDirection: 'row' }}>
@@ -119,7 +114,7 @@ export default class UpdateQualificationScreen extends Component {
               </View>
             </View>
             <TouchableOpacity style={{ width: context.screenWidth }} onPress={() => this.onNextClick()}>
-              <Text style={[context.utilities.styles.LoginButtonEnableTextStyle, { marginTop: 10, marginBottom: 30 }]}>UPDATE</Text>
+              <Text style={[context.utilities.styles.LoginButtonEnableTextStyle, { marginTop: 10, marginBottom: 30 }]}>ADD</Text>
             </TouchableOpacity>
           </View>
         )}

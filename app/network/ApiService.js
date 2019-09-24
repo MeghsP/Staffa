@@ -6,6 +6,17 @@ import moment from 'moment';
 
 export default class ApiService {
 
+  getAppResources(callBack){
+    var appResourceDoc = firebase.firestore().collection(Strings.FS_COLLECTION_APP_RESOURCES).doc(Strings.FS_DOC_CONTRACTS);
+    appResourceDoc.get().then(querySnapshot => {
+      if(querySnapshot.exists){
+        callBack(null, querySnapshot.data());
+      } else {
+        callBack("Error", null);
+      }
+    })
+  }
+
   getUserData(uid, callBack){
     var userDataStore = firebase.firestore().collection(Strings.FS_COLLECTION_USERS).doc(uid);
     userDataStore.get()
@@ -75,6 +86,7 @@ export default class ApiService {
   }
 
   uploadImage(filePath,imageAvatar, callBack){
+    
     UUIDGenerator.getRandomUUID((uuid) => {
       console.log("ApiService uploadImage uuid : " + uuid);
       const ext = imageAvatar.split('.').pop(); // Extract image extension
@@ -86,9 +98,10 @@ export default class ApiService {
         .on(firebase.storage.TaskEvent.STATE_CHANGED,
           snapshot => {
             console.log("ApiService uploadImage state : " + firebase.storage.TaskState.SUCCESS);
-            if (snapshot.state === firebase.storage.TaskState.SUCCESS) {
+            if (snapshot.state === firebase.storage.TaskState.SUCCESS && callBack) {
               console.log("ApiService uploadImage URL : " + snapshot.downloadURL);
               callBack("", snapshot.downloadURL);
+              callBack = null;
             } 
           },
           error => {
@@ -158,6 +171,10 @@ export default class ApiService {
    getUserNotificationNode(userID){
       return firebase.firestore().collection(Strings.FS_COLLECTION_USERS).doc(userID).collection(Strings.FS_COLLECTION_NOTIFICATIONS);
    }
+
+   getUserCollection(){
+    return firebase.firestore().collection(Strings.FS_COLLECTION_USERS);
+ }
 
    getConversationMessagesNode(chatUID){
     var chatRef = firebase.firestore().collection(Strings.FS_COLLECTION_CONVERSATION).doc(chatUID);
@@ -295,13 +312,13 @@ export default class ApiService {
                             return Strings.APP_SCREEN_SKILLS;
                           }
                         } else {
-                          return Strings.APP_SCREEN_REFERENCES;
+                          return Strings.APP_SCREEN_REFERENCE_LIST_LOGIN;
                         }
                       } else {
                         return Strings.APP_SCREEN_CERTIFICATE;
                       }
                     } else {
-                      return Strings.APP_SCREEN_QUALIFICATION;
+                      return Strings.APP_SCREEN_QUALIFICATION_LIST_LOGIN;
                     }
                   } else {
                     return Strings.APP_SCREEN_DBS;

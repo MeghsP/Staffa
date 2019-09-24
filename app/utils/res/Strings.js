@@ -66,6 +66,8 @@ const Strings = {
   APP_SCREEN_SKILLS:"SkillsScreen",
   APP_SCREEN_BIO:"BioScreen",
   APP_SCREEN_BASIC_INFO:"BasicInfoScreen",
+  APP_SCREEN_QUALIFICATION_LIST_LOGIN:"QualificationListScreenLogin",
+  APP_SCREEN_REFERENCE_LIST_LOGIN:"ReferencesListScreenLogin",
   APP_SCREEN_SUCCESS:"SuccessScreen",
 
   APP_SCREEN_UPDATE_ADDRESS:"UpdateAddressScreen",
@@ -78,10 +80,15 @@ const Strings = {
   APP_SCREEN_UPDATE_NOTIFICATION_SETTINGS:"UpdateNotificationSettingsScreen",
   APP_SCREEN_UPDATE_PRIVACY:"UpdatePrivacyScreen",
   APP_SCREEN_UPDATE_QUALIFICATIONS:"UpdateQualificationScreen",
-  APP_SCREEN_UPDATE_REFERENCES:"UpdateReferencesScreen",
+  APP_SCREEN_UPDATE_REFERENCES:"UpdateReferenceScreen",
   APP_SCREEN_UPDATE_SKILLS:"UpdateSkillsScreen",
   APP_SCREEN_UPDATE_TERM_CONDITIONS:"UpdateTermsConditionScreen",
   APP_SCREEN_UPDATE_VERIFICATION:"UpdateVerificationScreen",
+  APP_SCREEN_QUALIFICATION_LIST:"QualificationListScreen",
+  APP_SCREEN_ADD_QUALIFICATION:"AddQualificationScreen",
+  APP_SCREEN_REFERENCES_LIST:"ReferencesListScreen",
+  APP_SCREEN_ADD_REFERENCE:"AddReferenceScreen",
+  
 
 
   APP_SCREEN_HOME:"HomeScreen",
@@ -110,7 +117,13 @@ const Strings = {
   FS_COLLECTION_MESSAGES : "Messages",
   FS_COLLECTION_NOTIFICATIONS : "Notifications",
 
-  FS_COLLECTION_APP_DATA : "AppData",
+  FS_COLLECTION_APP_RESOURCES : "AppResources",
+  FS_DOC_CONTRACTS : "Contracts",
+  
+  APP_RESOURCE_EMPLOYMENT_CONTRACT:'EmploymentContract',
+  APP_RESOURCE_TNC:'TermsConditions',
+  APP_RESOURCE_PRIVACY_POLICY:'PrivacyPolicyContract',
+  APP_RESOURCE_INFO_SHARING:'InfoSharing',
 
 
   alertLogout:'Are you sure you want to Logout?',
@@ -118,6 +131,9 @@ const Strings = {
   msgNoContactsAvailable:'No contacts available',
   msgNoChatFound:'No chats found',
   msgNoNotificationsFound:'No notifications found',
+  msgNoQualificationFound:'No qualifications found',
+  msgNoReferencesFound:'No references found',
+  msgErrorLoadingPDF:'Error in loading PDF',
   msgSomethingWentWrong:'Something went wrong. Please try later',
 
   dialogButtonOK:"OK",

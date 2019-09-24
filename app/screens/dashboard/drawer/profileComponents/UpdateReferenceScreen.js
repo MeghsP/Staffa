@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, TextInput, Image, TouchableOpacity } from 'react-native';
 import { AppConsumer } from '../../../../context/AppProvider';
 
-export default class UpdateQualificationScreen extends Component {
+export default class UpdateReferenceScreen extends Component {
   constructor(args) {
     super(args);
     this.state = {
@@ -14,7 +14,7 @@ export default class UpdateQualificationScreen extends Component {
   componentDidMount() {
     var index = this.props.navigation.state.params.index;
     this.setState({ selectedIndex: index });
-    this.setState({ selectedData: this.context.userData.qualification.data[index] });
+    this.setState({ selectedData: this.context.userData.references.data[index] });
   }
 
   updateTotalData(image) {
@@ -37,10 +37,10 @@ export default class UpdateQualificationScreen extends Component {
 
   updateFirestoreData(screen, data) {
     screen.context.showLoading(true);
-    var allData = this.context.userData.qualification.data;
+    var allData = this.context.userData.references.data;
     allData[this.state.selectedIndex] = data;
     var myData = {
-      qualification: {
+      references: {
         data: allData
       }
     };
@@ -53,14 +53,14 @@ export default class UpdateQualificationScreen extends Component {
 
   onNextClick() {
     if (this.state.selectedData.name === "") {
-      this.context.showToast("Please enter qualification name");
+      this.context.showToast("Please enter reference name");
       return;
     }
     var data = this.state.selectedData;
     var screen = this;
     if (data.doc.length > 0) {
       screen.context.showLoading(true);
-      var filePath = this.context.currentUser.uid + "/" + this.context.utilities.strings.FS_FILE_DIR_QUALIfICATION;
+      var filePath = this.context.currentUser.uid + "/" + this.context.utilities.strings.FS_FILE_DIR_REFERENCES;
       this.context.apiService.uploadImage(filePath, data.doc, (error, response) => {
         console.log("onNextClick uploadImage response : " + response);
         data.docURL = response;
@@ -88,7 +88,7 @@ export default class UpdateQualificationScreen extends Component {
               </TouchableOpacity>
               <View style={{ alignItems: 'center', flex: 1 }} >
                 <Text style={context.utilities.styles.headerLogoTextStyle}>{context.utilities.strings.appName}</Text>
-                <Text style={context.utilities.styles.headerInfoTextStyle}>Update Qualification</Text>
+                <Text style={context.utilities.styles.headerInfoTextStyle}>Update Reference</Text>
               </View>
             </View>
             <View style={context.utilities.styles.baseStyle1}>
@@ -99,7 +99,7 @@ export default class UpdateQualificationScreen extends Component {
                 <View style={[context.utilities.styles.InputTextBoxStyle, { marginTop: 0 }]}>
                   <TextInput
                     style={this.state.selectedData.name === '' ? context.utilities.styles.InputTextDisableStyle : context.utilities.styles.InputTextEnableStyle}
-                    placeholder="Name of Qualification"
+                    placeholder="Name of Reference"
                     onChangeText={(text) => { this.updateTextChange(text) }}
                     returnKeyType={"done"}
                     underlineColorAndroid='transparent'

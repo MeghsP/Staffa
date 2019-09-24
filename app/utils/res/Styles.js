@@ -147,10 +147,20 @@ module.exports = StyleSheet.create({
   TNCBackgroundViewStyle: { 
     borderColor:Colors.black, 
     borderWidth:1,
-    height:windowHeight - 150,
+    width:windowWidth - 50,
+    height:350,
+    alignItems:'center',
+    justifyContent:'center',
     backgroundColor:Colors.white, 
-    margin:30,
-    padding:10
+    marginTop:30,
+    padding:1,
+  },
+
+  TNCPDFViewStyle: { 
+    borderColor:Colors.black, 
+    borderWidth:1,
+    width:windowWidth - 53,
+    height:347,
   },
 
   TNCFixBackgroundViewStyle: { 
@@ -177,6 +187,7 @@ module.exports = StyleSheet.create({
     borderColor:'transparent', 
     borderRadius:0, 
     marginLeft:40, 
+    marginTop:10,
     marginRight:40
   },
 
@@ -423,6 +434,76 @@ module.exports = StyleSheet.create({
     marginRight:10
   },
   container: { width:windowWidth,flex: 1,backgroundColor: Colors.appBGColor},
+
+  QualificationListRowBGStyle:{
+    width: windowWidth - 20,
+    margin: 10, 
+    backgroundColor: Colors.lightGray, 
+    borderColor: Colors.black, 
+    borderWidth: 1, 
+    borderRadius: 10
+  },
+
+  QualificationListRowImageStyle:{
+    flex: 1, 
+    height: 170, 
+    borderTopLeftRadius: 10, 
+    borderTopRightRadius: 10, 
+  },
+
+  QualificationListRowNameStyle:{
+    color:Colors.black,
+    fontSize:12,
+    fontWeight:'bold',
+    margin:10
+  },
+
+  QualificationListRowOptionBGStyle:{
+    position: 'absolute', 
+    alignSelf: 'flex-end', 
+    marginRight: 5 
+  },
+
+  QualificationListRowOptionBGInnerStyle:{
+    flexDirection: 'row', 
+    marginLeft: 5, 
+    marginTop: 5, 
+    marginRight: 5, 
+    borderRadius: 10, 
+    backgroundColor: Colors.alertTransparentColor
+  },
+  QualificationListTopImageStyle:{
+    width: 30, 
+    height: 30 
+  },
+
+  AddQualificationImageBGStyle:{
+    margin: 10, 
+    height: 200, 
+    width: windowWidth - 20, 
+    borderColor: Colors.black, 
+    borderWidth: 1, 
+    borderRadius: 1 
+  },
+
+  AddQualificationImageStyle:{
+    width: windowWidth - 22, 
+    height: 198
+  },
+
+  AddQualificationUploadButtonStyle:{
+    width:90,
+    height:50,
+    fontWeight:'bold',
+    color:Colors.white,
+    borderRadius: 10,
+    backgroundColor: Colors.appColor,
+    marginLeft:50,
+    marginRight:50,
+    padding:15,
+    marginTop:5,
+    textAlign: 'center'
+  },
 
   /**
     Alert Dialog style

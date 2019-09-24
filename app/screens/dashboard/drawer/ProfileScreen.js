@@ -9,15 +9,15 @@ const PROFILE_OPTIONS = [
   {name:"Basic Settings", screen:Strings.APP_SCREEN_UPDATE_BASIC_INFO},
   {name:"Address or Bank ", screen:Strings.APP_SCREEN_UPDATE_ADDRESS},
   {name:"Terms & Condition", screen:Strings.APP_SCREEN_UPDATE_TERM_CONDITIONS},
-  {name:"Employee Contract", screen:Strings.APP_SCREEN_UPDATE_EMPLOYMENT_CONTRACT},
+  {name:"Employement Contract", screen:Strings.APP_SCREEN_UPDATE_EMPLOYMENT_CONTRACT},
   {name:"Privacy", screen:Strings.APP_SCREEN_UPDATE_PRIVACY},
   {name:"Info Sharing", screen:Strings.APP_SCREEN_UPDATE_INFO_SHARING},
   {name:"Notification", screen:Strings.APP_SCREEN_UPDATE_NOTIFICATION_SETTINGS},
   {name:"Verification", screen:Strings.APP_SCREEN_UPDATE_VERIFICATION},
   {name:"DBS", screen:Strings.APP_SCREEN_UPDATE_DBS},
-  {name:"Qualification", screen:Strings.APP_SCREEN_UPDATE_QUALIFICATIONS},
+  {name:"Qualification", screen:Strings.APP_SCREEN_QUALIFICATION_LIST},
   {name:"Certificate", screen:Strings.APP_SCREEN_UPDATE_CERTIFICATE},
-  {name:"References", screen:Strings.APP_SCREEN_UPDATE_REFERENCES},
+  {name:"References", screen:Strings.APP_SCREEN_REFERENCES_LIST},
   {name:"Skills", screen:Strings.APP_SCREEN_UPDATE_SKILLS},
   {name:"Bio", screen:Strings.APP_SCREEN_UPDATE_BIO}
 ];
@@ -37,6 +37,8 @@ export default class ProfileScreen extends Component {
 
  onOptionClick(item){
   console.log("onOptionClick item : " + JSON.stringify(item));
+  console.log("onOptionClick item qualifications : " + this.context.userData.qualification.data);
+  console.log("onOptionClick item qualifications : " + JSON.stringify(this.context.userData.qualification.data));
   this.context.moveToScreen(this, item.screen);
 }
 

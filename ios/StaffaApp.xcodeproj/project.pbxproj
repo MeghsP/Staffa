@@ -32,6 +32,7 @@
 		F16ABFC5B1744903A26EEC65 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8BAF5513090E4F7793F04A48 /* Octicons.ttf */; };
 		E76B424FD01C4010B8F519B6 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 64278F7DF2F64E9AB2B6EC38 /* SimpleLineIcons.ttf */; };
 		D7963B4DF902475590D32829 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 431578460CBB4342AE38C284 /* Zocial.ttf */; };
+		5CE669676C944410BD67DF91 /* QUEEN OF THE MODERN AGE.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BD0B593BE4964B29BA446FFD /* QUEEN OF THE MODERN AGE.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +85,7 @@
 		8BAF5513090E4F7793F04A48 /* Octicons.ttf */ = {isa = PBXFileReference; name = "Octicons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		64278F7DF2F64E9AB2B6EC38 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; name = "SimpleLineIcons.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		431578460CBB4342AE38C284 /* Zocial.ttf */ = {isa = PBXFileReference; name = "Zocial.ttf"; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		BD0B593BE4964B29BA446FFD /* QUEEN OF THE MODERN AGE.ttf */ = {isa = PBXFileReference; name = "QUEEN OF THE MODERN AGE.ttf"; path = "../assets/fonts/QUEEN OF THE MODERN AGE.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,6 +213,7 @@
 				8BAF5513090E4F7793F04A48 /* Octicons.ttf */,
 				64278F7DF2F64E9AB2B6EC38 /* SimpleLineIcons.ttf */,
 				431578460CBB4342AE38C284 /* Zocial.ttf */,
+				BD0B593BE4964B29BA446FFD /* QUEEN OF THE MODERN AGE.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -369,6 +372,7 @@
 				F16ABFC5B1744903A26EEC65 /* Octicons.ttf in Resources */,
 				E76B424FD01C4010B8F519B6 /* SimpleLineIcons.ttf in Resources */,
 				D7963B4DF902475590D32829 /* Zocial.ttf in Resources */,
+				5CE669676C944410BD67DF91 /* QUEEN OF THE MODERN AGE.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

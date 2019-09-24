@@ -26,7 +26,7 @@ export default class CertificateScreen extends Component {
  onNextClick(){
   this.context.showLoading(true);
   var data =  {
-    cartificates:{
+    certificates:{
       data:this.state.data
   }};
   this.context.apiService.updateFirestoreUserData(this.context.currentUser.uid,data); 

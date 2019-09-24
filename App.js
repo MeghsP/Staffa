@@ -17,13 +17,13 @@ import NotificationSettingsScreen from './app/screens/auth/signin/NotificationSe
 import BeginVerificationScreen from './app/screens/auth/signin/BeginVerificationScreen';
 import VerificationScreen from './app/screens/auth/signin/VerificationScreen';
 import DBSScreen from './app/screens/auth/signin/DBSScreen';
-import QualificationScreen from './app/screens/auth/signin/QualificationScreen';
 import CertificateScreen from './app/screens/auth/signin/CertificateScreen';
-import ReferencesScreen from './app/screens/auth/signin/ReferencesScreen';
 import SkillsScreen from './app/screens/auth/signin/SkillsScreen';
 import BioScreen from './app/screens/auth/signin/BioScreen';
 import SuccessScreen from './app/screens/auth/signin/SuccessScreen';
 import VerifyMobileNumberScreen from './app/screens/auth/signin/VerifyMobileNumberScreen';
+import QualificationListScreenLogin from './app/screens/auth/signin/QualificationListScreenLogin';
+import ReferencesListScreenLogin from './app/screens/auth/signin/ReferencesListScreenLogin';
 
 import UpdateAddressScreen from './app/screens/dashboard/drawer/profileComponents/UpdateAddressScreen';
 import UpdateBasicInfoScreen from './app/screens/dashboard/drawer/profileComponents/UpdateBasicInfoScreen';
@@ -35,10 +35,14 @@ import UpdateInfoSharingScreen from './app/screens/dashboard/drawer/profileCompo
 import UpdateNotificationSettingsScreen from './app/screens/dashboard/drawer/profileComponents/UpdateNotificationSettingsScreen';
 import UpdatePrivacyScreen from './app/screens/dashboard/drawer/profileComponents/UpdatePrivacyScreen';
 import UpdateQualificationScreen from './app/screens/dashboard/drawer/profileComponents/UpdateQualificationScreen';
-import UpdateReferencesScreen from './app/screens/dashboard/drawer/profileComponents/UpdateReferencesScreen';
+import UpdateReferenceScreen from './app/screens/dashboard/drawer/profileComponents/UpdateReferenceScreen';
 import UpdateSkillsScreen from './app/screens/dashboard/drawer/profileComponents/UpdateSkillsScreen';
 import UpdateTermsConditionScreen from './app/screens/dashboard/drawer/profileComponents/UpdateTermsConditionScreen';
 import UpdateVerificationScreen from './app/screens/dashboard/drawer/profileComponents/UpdateVerificationScreen';
+import QualificationListScreen from './app/screens/dashboard/drawer/profileComponents/QualificationListScreen';
+import AddQualificationScreen from './app/screens/dashboard/drawer/profileComponents/AddQualificationScreen';
+import ReferencesListScreen from './app/screens/dashboard/drawer/profileComponents/ReferencesListScreen';
+import AddReferenceScreen from './app/screens/dashboard/drawer/profileComponents/AddReferenceScreen';
 
 import HomeScreen from './app/screens/dashboard/HomeScreen';
 import ProfileScreen from './app/screens/dashboard/drawer/ProfileScreen';
@@ -61,13 +65,13 @@ let RootStack = createStackNavigator({
       BeginVerificationScreen:{screen:BeginVerificationScreen},
       VerificationScreen:{screen:VerificationScreen},
       DBSScreen:{screen:DBSScreen},
-      QualificationScreen:{screen:QualificationScreen},
       CertificateScreen:{screen:CertificateScreen},
-      ReferencesScreen:{screen:ReferencesScreen},
       SkillsScreen:{screen:SkillsScreen},
       BioScreen:{screen:BioScreen},
       SuccessScreen:{screen:SuccessScreen},
       VerifyMobileNumberScreen:{screen:VerifyMobileNumberScreen},
+      QualificationListScreenLogin:{screen:QualificationListScreenLogin},
+      ReferencesListScreenLogin:{screen:ReferencesListScreenLogin},
 
       UpdateAddressScreen:{screen:UpdateAddressScreen},
       UpdateBasicInfoScreen:{screen:UpdateBasicInfoScreen},
@@ -79,10 +83,14 @@ let RootStack = createStackNavigator({
       UpdateNotificationSettingsScreen:{screen:UpdateNotificationSettingsScreen},
       UpdatePrivacyScreen:{screen:UpdatePrivacyScreen},
       UpdateQualificationScreen:{screen:UpdateQualificationScreen},
-      UpdateReferencesScreen:{screen:UpdateReferencesScreen},
+      UpdateReferenceScreen:{screen:UpdateReferenceScreen},
       UpdateSkillsScreen:{screen:UpdateSkillsScreen},
       UpdateTermsConditionScreen:{screen:UpdateTermsConditionScreen},
       UpdateVerificationScreen:{screen:UpdateVerificationScreen},
+      QualificationListScreen:{screen:QualificationListScreen},
+      AddQualificationScreen:{screen:AddQualificationScreen},
+      ReferencesListScreen:{screen:ReferencesListScreen},
+      AddReferenceScreen:{screen:AddReferenceScreen},
 
       HomeScreen:{screen:HomeScreen},
       ProfileScreen:{screen:ProfileScreen},

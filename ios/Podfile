@@ -41,6 +41,8 @@ target 'StaffaApp' do
 
   pod 'react-native-pdf', :path => '../node_modules/react-native-pdf'
 
+  pod 'RNPDF', :path => '../node_modules/react-native-view-pdf'
+
   target 'StaffaAppTests' do
     inherit! :search_paths
     # Pods for testing

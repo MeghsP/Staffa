@@ -49,6 +49,9 @@ export default class AppProvider extends React.Component {
 
       isInternetAvailable:true,
 
+      // App Resources
+      appResources:null,
+
       okText: '',
       cancelText: '',
       dialogMsg: '',
@@ -62,7 +65,7 @@ export default class AppProvider extends React.Component {
     If no, then jump to Login screen
   */
   checkUserAuthentication = (callBack) => {
-
+    this.getAppResources();
     this.callBack = callBack;
     this.fireBaseListener = firebase.auth().onAuthStateChanged(user => {
       console.log("checkIsUserAuthenticated USER : " + JSON.stringify(user));
@@ -86,6 +89,15 @@ export default class AppProvider extends React.Component {
         }
       }
     })
+  }
+
+  getAppResources() {
+    apiService.getAppResources((error, response) => {
+      if(!error){
+        this.setState({appResources:response});
+        console.log("getAppResources appResources : " + JSON.stringify(response));
+      }
+    });
   }
 
   getFCMToken() {
@@ -442,6 +454,7 @@ export default class AppProvider extends React.Component {
         updateUserData: this.updateUserData,
         currentUser: this.state.user,
         userData: this.state.userData,
+        appResources:this.state.appResources,
         currentScreen: this.state.currentScreen,
         replaceScreen: this.replaceScreen,
         moveToScreen: this.moveToScreen,

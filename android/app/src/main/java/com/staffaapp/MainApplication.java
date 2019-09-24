@@ -1,36 +1,23 @@
 package com.staffaapp;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.pm.PackageManager;
-import android.util.Log;
 
 import com.facebook.react.PackageList;
-import com.facebook.hermes.reactexecutor.HermesExecutorFactory;
-import com.facebook.react.bridge.JavaScriptExecutorFactory;
 import com.facebook.react.ReactApplication;
-import org.wonday.pdf.RCTPdfView;
-import com.RNFetchBlob.RNFetchBlobPackage;
-import com.zyu.ReactNativeWheelPickerPackage;
-import io.github.traviskn.rnuuidgenerator.RNUUIDGeneratorPackage;
+import com.rumax.reactnative.pdfviewer.PDFViewPackage;
+import com.facebook.react.ReactNativeHost;
+import com.facebook.react.ReactPackage;
+import com.facebook.soloader.SoLoader;
 
-import io.invertase.firebase.RNFirebasePackage;
+import java.util.List;
+
 import io.invertase.firebase.auth.RNFirebaseAuthPackage;
 import io.invertase.firebase.firestore.RNFirebaseFirestorePackage;
 import io.invertase.firebase.functions.RNFirebaseFunctionsPackage;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 import io.invertase.firebase.storage.RNFirebaseStoragePackage;
-
-import com.reactnative.ivpusic.imagepicker.PickerPackage;
-import com.oblador.vectoricons.VectorIconsPackage;
-import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
-import com.facebook.react.ReactNativeHost;
-import com.facebook.react.ReactPackage;
-import com.facebook.soloader.SoLoader;
-
-import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
 
